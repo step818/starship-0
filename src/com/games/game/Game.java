@@ -33,6 +33,9 @@ HUD display;
     public void play(){
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             // keep accepting commands from player and playing
+            System.out.println("What's your next command?");
+            Scanner input = new Scanner(System.in);
+            String command = input.nextLine();
         }
         // else, loop breaks, ask the player if they'd like to start over
     }
