@@ -11,19 +11,29 @@ import java.util.Scanner;
 
 public class Game {
 
+// Member Variables
+Player player1;
+Planet earth;
+Planet moon;
+Starship starship;
+HUD display;
+
 //  Business Methods
     public void begin() {
-        Player player1 = new Player();
-        ArrayList<String> resources = new ArrayList<>(Arrays.asList("water", "gas"));
-        Planet earth = new Planet("Earth", resources);
-        Planet moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel")));
-        Starship starship = new Starship();
-        HUD display = new HUD();
-
-
-//        while( the players health is > 0){ keep playing }
-
+        player1 = new Player();
+        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
+        starship = new Starship(earth);
+        display = new HUD();
 
         System.out.println(player1.getName());
+        // play()
+    }
+
+    public void play(){
+        while(player1.getHealth() > 0 && starship.getHealth() > 0){
+            // keep accepting commands from player and playing
+        }
+        // else, loop breaks, ask the player if they'd like to start over
     }
 }

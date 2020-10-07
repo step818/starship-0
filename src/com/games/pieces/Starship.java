@@ -4,7 +4,12 @@ public class Starship {
 
     public int health = 100;
     public int fuel = 100;
+    public boolean inSpace = false;
+    public Planet currentLocation;
 
+    public Starship(Planet currentLocation){
+        setCurrentLocation(currentLocation);
+    }
 
     public int getHealth() {
         return health;
@@ -20,5 +25,21 @@ public class Starship {
 
     public void setFuel(int fuel) {
         this.fuel = fuel;
+    }
+
+    public boolean isInSpace() {
+        return inSpace;
+    }
+
+    public void setInSpace(boolean inSpace) {
+        this.inSpace = inSpace;
+    }
+
+    public Planet getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Planet currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }

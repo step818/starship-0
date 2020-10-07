@@ -14,7 +14,6 @@ public class Player {
     public Player() {
         setName();
         setInventory();
-
     }
 
     public int getHealth() {
@@ -40,7 +39,6 @@ public class Player {
     public void setName() {
         Output.askName();
         Scanner input = new Scanner(System.in);
-
         this.name = input.nextLine();
     }
 
