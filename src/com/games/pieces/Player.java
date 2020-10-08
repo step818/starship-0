@@ -11,6 +11,7 @@ public class Player {
     public static String name;
     public String itemToGrab;
 
+
     public Player() {
         setName();
         setInventory();
