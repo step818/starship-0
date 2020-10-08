@@ -17,15 +17,25 @@ public class TextParser {
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
     public static void gamePlayScanner(String input) {
-        String[] inputSplit = input.split(" ", 2);
+        String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
         // parse for the verb the user has chosen
         String verbCommand = inputSplit[0];
         switch(verbCommand) {
             case "go":
-                scanGoNouns(inputSplit[1]);
+                if(inputSplit[1].length() > 0){
+                    scanGoNouns(inputSplit[1]);
+                }
+                else {
+                    System.out.println("Where do you want to " + verbCommand +"?");
+                }
                 break;
             case "use":
-                scanUseNouns(inputSplit[1]);
+                if(inputSplit[1].length() > 0){
+                    scanUseNouns(inputSplit[1]);
+                }
+                else {
+                    System.out.println("How do you " + verbCommand +"?");
+                }
                 break;
             case "show":
                 showStatus();
@@ -40,7 +50,6 @@ public class TextParser {
 
     // print the user health, fuel, inventory, location
     public static void showStatus() {
-        System.out.println("Show status called.");
         HUD.display();
     }
 

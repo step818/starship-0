@@ -20,19 +20,21 @@ HUD display;
 Level level1;
 
 //  Business Methods
-    public void begin() {
+    public void begin() throws InterruptedException {
         player1 = new Player();
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
-        starship = new Starship(earth);
-        display = new HUD();
+        starship = new Starship(moon);
+        display = new HUD(starship, player1);
         level1 = new Level();
 
         System.out.println(player1.getName());
+
         play();
     }
 
-    public void play(){
+    public void play() throws InterruptedException {
+        Output.introNarrative();
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             // keep accepting commands from player and playing
             System.out.println("What's your next command?");
