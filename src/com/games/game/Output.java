@@ -2,8 +2,10 @@ package com.games.game;
 
 import com.games.pieces.Alien;
 import com.games.pieces.Asteroid;
+import com.games.pieces.Planet;
 import com.games.pieces.Player;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -67,5 +69,9 @@ public class Output {
 //    different functions will store sections of the narrative.
 
 //    also, other functions will store responses to certain inputs guided from the text parser
-
+    public static void uponArrivingOnPlanet(Planet planet) {
+        String name = planet.getName();
+        ArrayList<String> resources = planet.getResources();
+        System.out.println(name + " has: " + resources);
+    }
 }

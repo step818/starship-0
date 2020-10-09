@@ -64,6 +64,7 @@ public class TextParser {
                 if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
                     starship.setCurrentLocation(planet);
                     System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                    Output.uponArrivingOnPlanet(planet);
                     break;
                 }
             }
