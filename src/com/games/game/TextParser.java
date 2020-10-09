@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class TextParser {
     // create a list of familiar key verbs
-    private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use"));
+    private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use", "take"));
     // do the same for familiar key directional nouns to be able to consult with functions that are looking for nav. input
     private Collection<String> goNouns = new ArrayList<>(Arrays.asList("moon", "up", "right", "left", "down", "straight", "back", "mercury", "mars"));
     // certain functions will need to parse for familiar items to use
