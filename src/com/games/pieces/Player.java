@@ -8,14 +8,14 @@ import java.util.Scanner;
 
 public class Player {
     private static int health = 100;
-    private static ArrayList<String> inventory;
+    private static ArrayList<String> inventory = new ArrayList<>();
     public static String name;
     public String itemToGrab;
 
 
+
     public Player() {
         setName();
-        setInventory();
     }
 
     public static int getHealth() {
@@ -30,8 +30,8 @@ public class Player {
         return inventory;
     }
 
-    public void setInventory() {
-        this.inventory = new ArrayList<String>(Arrays.asList("cell phone"));
+    public void setInventory(String item) {
+        this.inventory.add(item);
     }
 
     public static String getName() {

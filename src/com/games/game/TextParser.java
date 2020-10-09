@@ -32,10 +32,15 @@ public class TextParser {
                 break;
             case "use":
                 if(inputSplit[1].length() > 0){
-                    scanUseNouns(inputSplit[1]);
+                    scanUseNouns(inputSplit[1], verbCommand, player);
                 }
                 else {
                     System.out.println("How do you " + verbCommand +"?");
+                }
+                break;
+            case "take":
+                if(inputSplit[1].length() > 0){
+                    scanUseNouns(inputSplit[1], verbCommand, player);
                 }
                 break;
             case "show":
@@ -57,19 +62,25 @@ public class TextParser {
         if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
             for(Planet planet : planets){
                 if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
-                    System.out.println("planets list get name method: " + planet.getName());
                     starship.setCurrentLocation(planet);
                     System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
                     break;
                 }
             }
-        } else {
+        }
+        else {
             System.out.println("You can\'t go that way.");
         }
     }
 
-    public static void scanUseNouns(String noun) {
+    public static void scanUseNouns(String noun, String verb, Player player) {
 // if the argument is valid useNoun, " "
-        System.out.println("you want to use " + noun + " ?");
+        if (verb.equals("use")) {
+            System.out.println("you want to use " + noun + " ?");
+        }
+        else if (verb.equals("take")){
+            System.out.println("you want to take " + noun + " ?");
+            player.setInventory(noun);
+        }
     }
 }

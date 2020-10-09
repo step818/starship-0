@@ -116,4 +116,18 @@ public class Game {
         }
 
     }
+    public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
+        ArrayList<Asteroid> asteroids = new ArrayList<>();
+        for(int i = 0; i <= numOfRocks; i++){
+            asteroids.add(new Asteroid(size));
+        }
+        return asteroids;
+    }
+    public ArrayList<Alien> createAliens(int numOfAliens){
+        ArrayList<Alien> aliens = new ArrayList<>();
+        for(int i = 0; i <= numOfAliens; i++){
+            aliens.add(new Alien());
+        }
+        return aliens;
+    }
 }
