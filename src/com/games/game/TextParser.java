@@ -1,8 +1,8 @@
 package com.games.game;
 
 import com.games.pieces.Player;
-import com.games.pieces.Starship;
-
+import com.games.pieces.*;
+import com.games.game.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,14 +16,14 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public static void gamePlayScanner(String input) {
+    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level) {
         String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
         // parse for the verb the user has chosen
         String verbCommand = inputSplit[0];
         switch(verbCommand) {
             case "go":
                 if(inputSplit[1].length() > 0){
-                    scanGoNouns(inputSplit[1]);
+                    scanGoNouns(inputSplit[1], planets, starship);
                 }
                 else {
                     System.out.println("Where do you want to " + verbCommand +"?");
@@ -53,9 +53,18 @@ public class TextParser {
         HUD.display();
     }
 
-    public static void scanGoNouns(String noun) {
+    public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
         System.out.println("you want to go " + noun + " ?");
+        for(Planet planet : planets){
+      /*      System.out.println("Here's a planet");
+            System.out.println(planet.getName());
+            System.out.println(noun);*/
+            if(planet.getName().toLowerCase().equals(noun)){
+                starship.setCurrentLocation(planet);
+                System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+            }
+        }
     }
 
     public static void scanUseNouns(String noun) {
