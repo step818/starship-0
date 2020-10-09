@@ -3,12 +3,13 @@ package com.games.pieces;
 import com.games.game.Output;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Player {
-    private int health = 100;
-    private ArrayList<String> inventory;
-    public String name;
+    private static int health = 100;
+    private static ArrayList<String> inventory;
+    public static String name;
     public String itemToGrab;
 
     public Player() {
@@ -16,7 +17,7 @@ public class Player {
         setInventory();
     }
 
-    public int getHealth() {
+    public static int getHealth() {
         return health;
     }
 
@@ -24,15 +25,15 @@ public class Player {
         this.health = health;
     }
 
-    public ArrayList<String> getInventory() {
+    public static ArrayList<String> getInventory() {
         return inventory;
     }
 
     public void setInventory() {
-        this.inventory = new ArrayList<String>();
+        this.inventory = new ArrayList<String>(Arrays.asList("cell phone"));
     }
 
-    public String getName() {
+    public static String getName() {
         return name;
     }
 
