@@ -3,6 +3,7 @@ package com.games.pieces;
 import com.games.game.Output;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Player {
@@ -30,7 +31,7 @@ public class Player {
     }
 
     public void setInventory() {
-        this.inventory = new ArrayList<String>();
+        this.inventory = new ArrayList<String>(Arrays.asList("cell phone"));
     }
 
     public static String getName() {
