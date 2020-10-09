@@ -1,5 +1,7 @@
 package com.games.game;
 
+import com.games.pieces.Alien;
+import com.games.pieces.Asteroid;
 import com.games.pieces.Player;
 
 import java.util.Scanner;
@@ -44,6 +46,12 @@ public class Output {
         System.out.println("Whats your name: ");
     }
 
+    public static void printAsteroidObstacle(Asteroid asteroid){
+        System.out.println("There is a " + asteroid.getSize() + " asteroid to your " + asteroid.getPosition() + ". Steer the opposite direction of the asteroid to avoid Starship damage.");
+    }
+    public static void printAlienObstacle(Alien alien){
+        System.out.println("There is a an alien in your way. Shoot it to continue on without damage to your Starship and your health.");
+    }
 //    different functions will store sections of the narrative.
 
 //    also, other functions will store responses to certain inputs guided from the text parser
