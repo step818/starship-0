@@ -6,6 +6,7 @@ import com.games.game.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class TextParser {
     // create a list of familiar key verbs
@@ -16,14 +17,14 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level) {
+    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
         String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
         // parse for the verb the user has chosen
         String verbCommand = inputSplit[0];
         switch(verbCommand) {
             case "go":
                 if(inputSplit[1].length() > 0){
-                    scanGoNouns(inputSplit[1], planets, starship);
+                    scanGoNouns(inputSplit[1], planets, starship, space);
                 }
                 else {
                     System.out.println("Where do you want to " + verbCommand +"?");
@@ -53,17 +54,19 @@ public class TextParser {
         HUD.display();
     }
 
-    public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship) {
+    public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship, HashMap<String, HashMap<String, String>> space) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
-        System.out.println("you want to go " + noun + " ?");
-        for(Planet planet : planets){
-      /*      System.out.println("Here's a planet");
-            System.out.println(planet.getName());
-            System.out.println(noun);*/
-            if(planet.getName().toLowerCase().equals(noun)){
-                starship.setCurrentLocation(planet);
-                System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+        // search the hashmap for VALID destinations
+        if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
+            for(Planet planet : planets){
+                if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
+                    starship.setCurrentLocation(planet);
+                    System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                }
             }
+        }
+        else {
+            System.out.println("You can\'t go that way.");
         }
     }
 
