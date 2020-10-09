@@ -24,15 +24,6 @@ public class Starship {
     public static int getFuel() {
         return fuel;
     }
-    // A Starship has to go from point A to B. [0] = A, x[n]=B.
-    // max distance Spaceship has to cover in one full fill 100
-
-
-        //       return 0;
-    //   int i = 0, n = stations[i][0] <=maxDistance) {
-
-    // }
-
 
     public void setFuel(int fuel) {
         this.fuel = fuel;
@@ -51,7 +42,6 @@ public class Starship {
     }
 
     public void setCurrentLocation(Planet location) {
-        System.out.println("This is the set current location method- mwa ha ha");
         this.currentLocation = location;
         System.out.println(currentLocation.getName());
     }
@@ -72,5 +62,3 @@ public class Starship {
         Ypos = ypos;
     }
 }
-
-

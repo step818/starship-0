@@ -5,144 +5,127 @@ import com.games.pieces.*;
 //import com.games.pieces.Player;
 //import com.games.pieces.Starship;
 
-//<<<<<<< HEAD
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-//=======
 import java.lang.reflect.Array;
-//>>>>>>> 0727ebfdd3107880b1deea9bc14edb0e3ffa996e
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+
+
+import java.util.*;
 
 public class Game {
 
-    // Member Variables
+// Member Variables
     Player player1;
     Planet earth;
     Planet moon;
+    Planet venus;
     Planet mercury;
     Planet mars;
     ArrayList<Planet> planets = new ArrayList<>();
+    ArrayList<Asteroid> asteroids;
+    ArrayList<Alien> aliens;
     Starship starship;
     HUD display;
     Level level1;
+    public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
+    //private static final int HEIGHT = 10;
+//   private static final int WIDTH = 10;
 
-    private Rectangle gameScreenRec;
-    private GameArea gameScreen;
-    private boolean isRunning;
-    private static final int mapWidth = 100;
-    private static final int mapHeight = 100;
-    private int framesPerSecond = 60;
-    private int timePerLoop = 1000000000 / framesPerSecond;
 
-    //  Business Methods
-    public void begin(int screenWidth, int screenHeight) {
-        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
-        player1 = new Player('@', "yellow", 10, 10);
+    public HashMap<String, HashMap<String, String>> drawGame() {
+// Earths neighbors
+        HashMap<String, String> earthNeighbors = new HashMap<>();
 
+        earthNeighbors.put("right", "Moon");
+        space.put("Earth", earthNeighbors);
+// Moon neighbors
+        HashMap<String, String> moonNeighbors = new HashMap<>();
+
+        moonNeighbors.put("left", "Earth");
+        moonNeighbors.put("up", "Venus");
+        space.put("Moon", moonNeighbors);
+// Venus
+        HashMap<String, String> venusNeighbors = new HashMap<>();
+
+        venusNeighbors.put("down", "Moon");
+        venusNeighbors.put("up", "Mercury");
+        space.put("Venus", venusNeighbors);
+// Mercury neighbors
+        HashMap<String, String> mercuryNeighbors = new HashMap<>();
+
+        mercuryNeighbors.put("down", "Venus");
+        mercuryNeighbors.put("left", "Asteroids1");
+        space.put("Mercury", mercuryNeighbors);
+// Asteroids1 neighbors
+        HashMap<String, String> asteroid1Neighbors = new HashMap<>();
+
+        asteroid1Neighbors.put("right", "Mercury");
+        asteroid1Neighbors.put("up", "Aliens1");
+        space.put("Asteroids1", asteroid1Neighbors);
+// aliens
+        HashMap<String, String> alien1Neighbors = new HashMap<>();
+
+        alien1Neighbors.put("down", "Asteroids1");
+        alien1Neighbors.put("up", "Mars");
+        space.put("Aliens1", alien1Neighbors);
+// Mars
+        HashMap<String, String> marsNeighbors = new HashMap<>();
+
+        marsNeighbors.put("down", "Asteroids1");
+        space.put("Mars", marsNeighbors);
+
+        return space;
+    }
+
+//  Business Methods
+    public void begin() throws InterruptedException {
+        player1 = new Player();
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
         mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
         mars = new Planet("Mars", new ArrayList<>());
         planets.add(earth);
         planets.add(moon);
+        planets.add(venus);
         planets.add(mercury);
         planets.add(mars);
         starship = new Starship(earth);
-        display = new HUD();
+        display = new HUD(starship, player1);
         level1 = new Level();
-
+        space = drawGame();
         System.out.println(player1.getName());
-//<<<<<<< HEAD
-        //play();
-        run();
+        play(player1, planets, starship, display, level1);
     }
 
-
-    public void processInput() {
-        InputEvent event = gameScreen.getNextInput();
-        if (event instanceof KeyEvent) {
-            KeyEvent keypress = (KeyEvent)event;
-            switch (keypress.getKeyCode()){
-                case KeyEvent.VK_LEFT:
-                    player1.move(-1, 0);
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    player1.move(1, 0); break;
-                case KeyEvent.VK_UP:
-                    player1.move(0, -1);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    player1.move(0, 1);
-                    break;
-            }
-        } else if (event instanceof MouseEvent) {
-            //
+    public void play(Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level) throws InterruptedException {
+        Output.introNarrative();
+        while(player1.getHealth() > 0 && starship.getHealth() > 0){
+            // keep accepting commands from player and playing
+            System.out.println("What's your next command?");
+            Scanner input = new Scanner(System.in);
+            String command = input.nextLine();
+            TextParser.gamePlayScanner(command, player, planets, starship, display, level, space);
         }
-    }
-
-    public void render(){
-        gameScreen.pointCameraAt(player1, player1.getX(), player1.getY());
-        gameScreen.refresh();
-    }
-
-    public void run() {
-        isRunning = true;
-
-        while(isRunning) {
-            long startTime = System.nanoTime();
-
-            processInput();
-            render();
-
-            long endTime = System.nanoTime();
-
-            long sleepTime = timePerLoop - (endTime-startTime);
-
-            if (sleepTime > 0) {
-                try {
-                    Thread.sleep(sleepTime/1000000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
+        // else, loop breaks, ask the player if they'd like to start over
+        if(player1.getHealth() <= 0) {
+            // player died, start over?
         }
-    }
-
-    public void play() {
-        while (player1.getHealth() > 0 && starship.getHealth() > 0) {
-//=======
-            play(player1, planets, starship, display, level1);
-        }
-    }
-
-
-        public void play(Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level)
-        {
-            while(player1.getHealth() > 0 && starship.getHealth() > 0){
-//>>>>>>> 0727ebfdd3107880b1deea9bc14edb0e3ffa996e
-                // keep accepting commands from player and playing
-                System.out.println("What's your next command?");
-                Scanner input = new Scanner(System.in);
-                String command = input.nextLine();
-                TextParser.gamePlayScanner(command, player, planets, starship, display, level);
-            }
-            // else, loop breaks, ask the player if they'd like to start over
-            if (player1.getHealth() <= 0) {
-                // player died, start over?
-            } else if (starship.getHealth() <= 0) {
-                // starship exploded, start over?
-            }
-
+        else if (starship.getHealth() <= 0) {
+            // starship exploded, start over?
         }
 
-
-        //public void setPreferredSize(Dimension dimension) {
-        //  dimension.height
     }
-
+    public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
+        ArrayList<Asteroid> asteroids = new ArrayList<>();
+        for(int i = 0; i <= numOfRocks; i++){
+            asteroids.add(new Asteroid(size));
+        }
+        return asteroids;
+    }
+    public ArrayList<Alien> createAliens(int numOfAliens){
+        ArrayList<Alien> aliens = new ArrayList<>();
+        for(int i = 0; i <= numOfAliens; i++){
+            aliens.add(new Alien());
+        }
+        return aliens;
+    }
+}
