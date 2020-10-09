@@ -1,11 +1,16 @@
 package com.games.pieces;
 
+import java.util.ArrayList;
+
 public class Asteroid {
     public String size;
     public String position;
 
-    public Asteroid(String size, String position){
+    public Asteroid(String size){
         setSize(size);
+    }
+    public Asteroid(String size, String position){
+        this(size);
         setPosition(position);
     }
 

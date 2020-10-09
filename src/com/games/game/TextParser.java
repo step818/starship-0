@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class TextParser {
     // create a list of familiar key verbs
-    private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use"));
+    private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use", "take"));
     // do the same for familiar key directional nouns to be able to consult with functions that are looking for nav. input
     private Collection<String> goNouns = new ArrayList<>(Arrays.asList("moon", "up", "right", "left", "down", "straight", "back", "mercury", "mars"));
     // certain functions will need to parse for familiar items to use
@@ -33,10 +33,15 @@ public class TextParser {
                 break;
             case "use":
                 if(inputSplit[1].length() > 0){
-                    scanUseNouns(inputSplit[1]);
+                    scanUseNouns(inputSplit[1], verbCommand, player);
                 }
                 else {
                     System.out.println("How do you " + verbCommand +"?");
+                }
+                break;
+            case "take":
+                if(inputSplit[1].length() > 0){
+                    scanUseNouns(inputSplit[1], verbCommand, player);
                 }
                 break;
             case "show":
@@ -68,8 +73,14 @@ public class TextParser {
         }
     }
 
-    public static void scanUseNouns(String noun) {
+    public static void scanUseNouns(String noun, String verb, Player player) {
 // if the argument is valid useNoun, " "
-        System.out.println("you want to use " + noun + " ?");
+        if (verb.equals("use")) {
+            System.out.println("you want to use " + noun + " ?");
+        }
+        else if (verb.equals("take")){
+            System.out.println("you want to take " + noun + " ?");
+            player.setInventory(noun);
+        }
     }
 }
