@@ -10,12 +10,10 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException, IOException {
-
 //        start the game here
         System.out.println("Welcome to Starship");
         Game game = new Game();
         game.begin();
-
 //        Earth.draw();
 //        Moon.draw();
 

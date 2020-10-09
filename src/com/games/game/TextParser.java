@@ -29,7 +29,6 @@ public class TextParser {
                 else {
                     System.out.println("Where do you want to " + verbCommand +"?");
                 }
-                scanGoNouns(inputSplit[1], planets, starship, space);
                 break;
             case "use":
                 if(inputSplit[1].length() > 0){
@@ -65,6 +64,7 @@ public class TextParser {
                 if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
                     starship.setCurrentLocation(planet);
                     System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                    break;
                 }
             }
         }
