@@ -43,6 +43,7 @@ public class Starship {
 
     public void setCurrentLocation(Planet location) {
         this.currentLocation = location;
+        System.out.println(currentLocation.getName());
     }
 
     public static int getXpos() {

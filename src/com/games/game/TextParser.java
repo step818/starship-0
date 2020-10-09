@@ -12,7 +12,7 @@ public class TextParser {
     // create a list of familiar key verbs
     private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use"));
     // do the same for familiar key directional nouns to be able to consult with functions that are looking for nav. input
-    private Collection<String> goNouns = new ArrayList<>(Arrays.asList("moon", "up", "right", "left", "down", "straight", "back"));
+    private Collection<String> goNouns = new ArrayList<>(Arrays.asList("moon", "up", "right", "left", "down", "straight", "back", "mercury", "mars"));
     // certain functions will need to parse for familiar items to use
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
 
@@ -29,6 +29,7 @@ public class TextParser {
                 else {
                     System.out.println("Where do you want to " + verbCommand +"?");
                 }
+                scanGoNouns(inputSplit[1], planets, starship, space);
                 break;
             case "use":
                 if(inputSplit[1].length() > 0){
@@ -43,10 +44,7 @@ public class TextParser {
                 break;
             default:
                 System.out.println("What exactly are you saying? ");
-
         }
-
-
     }
 
     // print the user health, fuel, inventory, location

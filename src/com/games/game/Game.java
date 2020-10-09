@@ -6,11 +6,19 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.lang.reflect.Array;
+<<<<<<< HEAD
 import java.util.*;
+=======
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
+>>>>>>> 057ba484c3b7dbe839a2319ef53c041601df2f1e
 
 public class Game {
 
 // Member Variables
+<<<<<<< HEAD
     Player player1;
     Planet earth;
     Planet moon;
@@ -50,6 +58,17 @@ public class Game {
         System.out.println(space.get("Earth"));
         return space;
     }
+=======
+Player player1;
+Planet earth;
+Planet moon;
+Planet mercury;
+Planet mars;
+ArrayList<Planet> planets = new ArrayList<>();
+Starship starship;
+HUD display;
+Level level1;
+>>>>>>> 057ba484c3b7dbe839a2319ef53c041601df2f1e
 
 //  Business Methods
     public void begin() throws InterruptedException {
@@ -70,14 +89,22 @@ public class Game {
         play(player1, planets, starship, display, level1);
     }
 
+<<<<<<< HEAD
     public void play(Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level) throws InterruptedException {
         Output.introNarrative();
+=======
+    public void play(Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level){
+>>>>>>> 057ba484c3b7dbe839a2319ef53c041601df2f1e
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             // keep accepting commands from player and playing
             System.out.println("What's your next command?");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
+<<<<<<< HEAD
             TextParser.gamePlayScanner(command, player, planets, starship, display, level, space);
+=======
+            TextParser.gamePlayScanner(command, player, planets, starship, display, level);
+>>>>>>> 057ba484c3b7dbe839a2319ef53c041601df2f1e
         }
         // else, loop breaks, ask the player if they'd like to start over
         if(player1.getHealth() <= 0) {
