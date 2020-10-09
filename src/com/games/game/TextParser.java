@@ -29,7 +29,6 @@ public class TextParser {
                 else {
                     System.out.println("Where do you want to " + verbCommand +"?");
                 }
-                scanGoNouns(inputSplit[1], planets, starship, space);
                 break;
             case "use":
                 if(inputSplit[1].length() > 0){
@@ -58,12 +57,13 @@ public class TextParser {
         if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
             for(Planet planet : planets){
                 if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
+                    System.out.println("planets list get name method: " + planet.getName());
                     starship.setCurrentLocation(planet);
                     System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                    break;
                 }
             }
-        }
-        else {
+        } else {
             System.out.println("You can\'t go that way.");
         }
     }

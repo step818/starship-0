@@ -18,6 +18,7 @@ public class Game {
     Player player1;
     Planet earth;
     Planet moon;
+    Planet venus;
     Planet mercury;
     Planet mars;
     ArrayList<Planet> planets = new ArrayList<>();
@@ -32,26 +33,47 @@ public class Game {
 
 
     public HashMap<String, HashMap<String, String>> drawGame() {
-
+// Earths neighbors
         HashMap<String, String> earthNeighbors = new HashMap<>();
 
         earthNeighbors.put("right", "Moon");
         space.put("Earth", earthNeighbors);
-
+// Moon neighbors
         HashMap<String, String> moonNeighbors = new HashMap<>();
 
         moonNeighbors.put("left", "Earth");
         moonNeighbors.put("up", "Venus");
         space.put("Moon", moonNeighbors);
-
+// Venus
         HashMap<String, String> venusNeighbors = new HashMap<>();
 
-        venusNeighbors.put("up", "Mercury");
         venusNeighbors.put("down", "Moon");
+        venusNeighbors.put("up", "Mercury");
         space.put("Venus", venusNeighbors);
+// Mercury neighbors
+        HashMap<String, String> mercuryNeighbors = new HashMap<>();
 
-        // continue creating the space hashmap
-        System.out.println(space.get("Earth"));
+        mercuryNeighbors.put("down", "Venus");
+        mercuryNeighbors.put("left", "Asteroids1");
+        space.put("Mercury", mercuryNeighbors);
+// Asteroids1 neighbors
+        HashMap<String, String> asteroid1Neighbors = new HashMap<>();
+
+        asteroid1Neighbors.put("right", "Mercury");
+        asteroid1Neighbors.put("up", "Aliens1");
+        space.put("Asteroids1", asteroid1Neighbors);
+// aliens
+        HashMap<String, String> alien1Neighbors = new HashMap<>();
+
+        alien1Neighbors.put("down", "Asteroids1");
+        alien1Neighbors.put("up", "Mars");
+        space.put("Aliens1", alien1Neighbors);
+// Mars
+        HashMap<String, String> marsNeighbors = new HashMap<>();
+
+        marsNeighbors.put("down", "Asteroids1");
+        space.put("Mars", marsNeighbors);
+
         return space;
     }
 
@@ -60,10 +82,12 @@ public class Game {
         player1 = new Player();
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
         mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
         mars = new Planet("Mars", new ArrayList<>());
         planets.add(earth);
         planets.add(moon);
+        planets.add(venus);
         planets.add(mercury);
         planets.add(mars);
         starship = new Starship(earth);
