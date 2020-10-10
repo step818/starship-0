@@ -6,6 +6,7 @@ public class Starship {
     public static int fuel = 100;
     public boolean inSpace = false;
     public static Planet currentLocation;
+    public static String currentAsteroids;
     private static int Xpos = 1;
     private static int Ypos = 1;
 
@@ -43,7 +44,14 @@ public class Starship {
 
     public void setCurrentLocation(Planet location) {
         this.currentLocation = location;
-        System.out.println(currentLocation.getName());
+    }
+
+    public static String getCurrentAsteroids() {
+        return currentAsteroids;
+    }
+
+    public void setCurrentAsteroids(String currentAsteroids) {
+        this.currentAsteroids = currentAsteroids;
     }
 
     public static int getXpos() {

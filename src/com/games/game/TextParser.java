@@ -18,36 +18,30 @@ public class TextParser {
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
     public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
-        String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
-        // parse for the verb the user has chosen
-        String verbCommand = inputSplit[0];
-        switch(verbCommand) {
-            case "go":
-                if(inputSplit[1].length() > 0){
+        try {
+            String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
+            String verbCommand = inputSplit[0];
+            // parse for the verb the user has chosen
+            switch(verbCommand) {
+                case "go":
                     scanGoNouns(inputSplit[1], planets, starship, space);
-                }
-                else {
-                    System.out.println("Where do you want to " + verbCommand +"?");
-                }
-                break;
-            case "use":
-                if(inputSplit[1].length() > 0){
+                    break;
+                case "use":
                     scanUseNouns(inputSplit[1], verbCommand, player);
-                }
-                else {
-                    System.out.println("How do you " + verbCommand +"?");
-                }
-                break;
-            case "take":
-                if(inputSplit[1].length() > 0){
+                    break;
+                case "take":
                     scanUseNouns(inputSplit[1], verbCommand, player);
-                }
-                break;
-            case "show":
-                showStatus();
-                break;
-            default:
-                System.out.println("What exactly are you saying? ");
+                    break;
+                case "show":
+                    showStatus();
+                    break;
+                default:
+                    System.out.println("What exactly are you saying? ");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayOutOfBoundsException: ");
+            System.out.println(e.getMessage());
+            System.out.println("Try again");
         }
     }
 
@@ -59,14 +53,22 @@ public class TextParser {
     public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship, HashMap<String, HashMap<String, String>> space) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
         // search the hashmap for VALID destinations
+        String nextLocation = space.get(starship.getCurrentLocation().getName()).get(noun);
         if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
             for(Planet planet : planets){
-                if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
+                if(planet.getName().equals(nextLocation)){
                     starship.setCurrentLocation(planet);
-                    System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                    System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
                     Output.uponArrivingOnPlanet(planet);
                     break;
                 }
+            }
+            // if asteroids, make asteroid list, tell pleyer to WATCH OUT!, and allow player to try to dodge out of harms way
+            // if player hits asteroid, deduct health. set current location to asteroids
+            if(nextLocation.substring(0, nextLocation.length()-1).equals("Asteroids")){
+                System.out.println("Boom! Its an asteroid field!");
+                starship.setCurrentAsteroids(nextLocation);
+//                Output.uponArrivingOnObstacle(nextLocation);
             }
         }
         else {

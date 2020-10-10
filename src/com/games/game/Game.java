@@ -114,6 +114,7 @@ public class Game {
         }
 
     }
+
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
         ArrayList<Asteroid> asteroids = new ArrayList<>();
         for(int i = 0; i <= numOfRocks; i++){
@@ -121,6 +122,7 @@ public class Game {
         }
         return asteroids;
     }
+
     public ArrayList<Alien> createAliens(int numOfAliens){
         ArrayList<Alien> aliens = new ArrayList<>();
         for(int i = 0; i <= numOfAliens; i++){
