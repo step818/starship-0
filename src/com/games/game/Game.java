@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 
 
 import java.util.*;
+import java.util.Random;
 
 public class Game {
 
@@ -93,6 +94,7 @@ public class Game {
         planets.add(mercury);
         planets.add(mars);
         planets.add(obstacle1);
+        planets.add(obstacle2);
         asteroids = createAsteroids(2, "large");
         aliens = createAliens(2);
         starship = new Starship(earth);
@@ -127,8 +129,25 @@ public class Game {
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
         ArrayList<Asteroid> asteroids = new ArrayList<>();
         for(int i = 0; i < numOfRocks; i++){
+            String position = "left";
             // randomly pick a position i.e. "left", "down"
-            asteroids.add(new Asteroid(size, "dodge left"));
+            // TODO: give the player more or less options for dodging to make difficulty variable
+            // large - player has 25% chance of dodging. options: up, down, left, right
+            // medium - player has 33% chance of dodging. options: up, left, right
+            // small - player has 50% chance of dodging. options: left, right
+            Random rand = new Random();
+            int random = rand.nextInt(11);
+            System.out.println("random: " + random);
+            if(random < 6 && random % 2 == 0) {
+                position = "right";
+            } else if (random < 6 && random % 2 != 0) {
+                position = "left";
+            } else if (random >= 6 && random % 2 == 0) {
+                position = "up";
+            } else if (random >= 6 && random % 2 == 0) {
+                position = "down";
+            }
+            asteroids.add(new Asteroid(size, position));
         }
         return asteroids;
     }

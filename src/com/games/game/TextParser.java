@@ -81,16 +81,24 @@ public class TextParser {
                 }
             } else if (neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Aliens")) {
                 System.out.println("Boom! Its an alien ambush!");
+                starship.setInSpace(true);
                 for(Alien alien : aliens) {
-                    boolean shot = Output.shotAlien(alien);
-                    if (shot) {
-                        alien.setHealth(alien.getHealth() - 50);
-                        // while (alien.getHealth > 0) stay with it and kill him. change aliens position
-                        //until it dies, see if you can remove it from the list once dead
-                    } else {
-                        System.out.println("Missed! Alien fired back! Starship health: \'-20\'");
-                        starship.setHealth(starship.getHealth() - 20);
+                    int count = 1;
+                    while(alien.getHealth() > 0) {
+                        System.out.println("Alien ship health: " + alien.getHealth());
+                        boolean shot = Output.shotAlien(alien);
+                        if (shot) {
+                            alien.setHealth(alien.getHealth() - 50);
+                            System.out.println("Direct hit! You hit the target!");
+                            // while (alien.getHealth > 0) stay with it and kill him. change aliens position
+                            //until it dies, see if you can remove it from the list once dead
+                        } else {
+                            System.out.println("Missed! Alien ship fired back! Starship health: \'-20\'");
+                            starship.setHealth(starship.getHealth() - 20);
+                        }
+                        count++;
                     }
+                    System.out.println("You killed an alien ship! Success!");
                 }
             }
 

@@ -24,6 +24,11 @@ public class Alien {
         this.position = position;
     }
 
+    public void changePosition() {
+        // String = pick a random direction
+        // setPosition(position)
+    }
+
     // while alien health is > 0, continue to attack player
     // takes health from starship and player
     public void attack(){}

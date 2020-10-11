@@ -94,6 +94,7 @@ public class Output {
         System.out.println("An alien is threatening you, \'shoot up\' or \'shoot down\'");
         String input = scan.nextLine();
         if(input.equals(location)) {
+            // alien.changePosition(alien);  sets a new position randomly
             return true;
         } else {
             return false;
