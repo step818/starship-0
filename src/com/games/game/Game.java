@@ -88,22 +88,23 @@ public class Game {
         planets.add(venus);
         planets.add(mercury);
         planets.add(mars);
+        asteroids = createAsteroids(2, "large");
         starship = new Starship(earth);
         display = new HUD(starship, player1);
         level1 = new Level();
         space = drawGame();
         System.out.println(player1.getName());
-        play(player1, planets, starship, display, level1);
+        play(player1, planets, asteroids, starship, display, level1);
     }
 
-    public void play(Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level) throws InterruptedException {
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, Starship starship, HUD display, Level level) throws InterruptedException {
         Output.introNarrative();
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             // keep accepting commands from player and playing
             System.out.println("What's your next command?");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            TextParser.gamePlayScanner(command, player, planets, starship, display, level, space);
+            TextParser.gamePlayScanner(command, player, planets, asteroids, starship, display, level, space);
         }
         // else, loop breaks, ask the player if they'd like to start over
         if(player1.getHealth() <= 0) {
@@ -117,8 +118,9 @@ public class Game {
 
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
         ArrayList<Asteroid> asteroids = new ArrayList<>();
-        for(int i = 0; i <= numOfRocks; i++){
-            asteroids.add(new Asteroid(size));
+        for(int i = 0; i < numOfRocks; i++){
+            // randomly pick a position i.e. "left", "down"
+            asteroids.add(new Asteroid(size, "dodge left"));
         }
         return asteroids;
     }

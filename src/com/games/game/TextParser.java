@@ -17,14 +17,14 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
+    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
             String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
             String verbCommand = inputSplit[0];
             // parse for the verb the user has chosen
             switch(verbCommand) {
                 case "go":
-                    scanGoNouns(inputSplit[1], planets, starship, space);
+                    scanGoNouns(inputSplit[1], planets, asteroids, starship, space);
                     break;
                 case "use":
                     scanUseNouns(inputSplit[1], verbCommand, player);
@@ -50,13 +50,13 @@ public class TextParser {
         HUD.display();
     }
 
-    public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship, HashMap<String, HashMap<String, String>> space) {
+    public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, Starship starship, HashMap<String, HashMap<String, String>> space) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
         // search the hashmap for VALID destinations
-        String nextLocation = space.get(starship.getCurrentLocation().getName()).get(noun);
-        if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
+        HashMap<String, String> neighbors= space.get(starship.getCurrentLocation().getName());
+        if (neighbors.containsKey(noun)) {
             for(Planet planet : planets){
-                if(planet.getName().equals(nextLocation)){
+                if(planet.getName().equals(neighbors.get(noun))){
                     starship.setCurrentLocation(planet);
                     System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
                     Output.uponArrivingOnPlanet(planet);
@@ -65,10 +65,21 @@ public class TextParser {
             }
             // if asteroids, make asteroid list, tell pleyer to WATCH OUT!, and allow player to try to dodge out of harms way
             // if player hits asteroid, deduct health. set current location to asteroids
-            if(nextLocation.substring(0, nextLocation.length()-1).equals("Asteroids")){
+            if(neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Asteroids")){
                 System.out.println("Boom! Its an asteroid field!");
-                starship.setCurrentAsteroids(nextLocation);
-//                Output.uponArrivingOnObstacle(nextLocation);
+                starship.setCurrentAsteroids(neighbors.get(noun));
+                for(Asteroid asteroid : asteroids) {
+                    boolean dodged = Output.dodgeAsteroid(asteroid);
+                    // take damage or not based on a boolean if they dodged correctly
+                    if(dodged) {
+                        System.out.println("Dodged asteroid! Good job");
+                    } else {
+                        System.out.println("!!!@!%! Ouch!* Starship hit.");
+                        starship.setHealth(starship.getHealth() - 20);
+                    }
+                }
+                // setCurrentLocation(nextPlanet);
+//                Output.uponArrivingOnPlaner(nextLocation);
             }
         }
         else {

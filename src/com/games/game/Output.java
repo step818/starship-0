@@ -30,7 +30,6 @@ public class Output {
 
     public static void introNarrative() throws InterruptedException {
         // The story begins, fill the user in with their mission
-        Scanner scan = new Scanner(System.in);
         TimeUnit.SECONDS.sleep(1);
         System.out.println("ring ring...");
         TimeUnit.SECONDS.sleep(1);
@@ -73,5 +72,18 @@ public class Output {
         String name = planet.getName();
         ArrayList<String> resources = planet.getResources();
         System.out.println(name + " has: " + resources);
+    }
+
+    public static boolean dodgeAsteroid(Asteroid asteroid) {
+        String location = asteroid.position;
+        System.out.println("location: " + location);
+        Scanner scan = new Scanner(System.in);
+        System.out.println("An asteroid has appeared! \'dodge right\' or \'dodge left\'");
+        String input = scan.nextLine();
+        if(input.equals(location)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
