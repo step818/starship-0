@@ -19,6 +19,8 @@ public class Game {
     Planet venus;
     Planet mercury;
     Planet mars;
+    Planet obstacle1;
+    Planet obstacle2;
     ArrayList<Planet> planets = new ArrayList<>();
     ArrayList<Asteroid> asteroids;
     ArrayList<Alien> aliens;
@@ -69,7 +71,7 @@ public class Game {
 // Mars
         HashMap<String, String> marsNeighbors = new HashMap<>();
 
-        marsNeighbors.put("down", "Asteroids1");
+        marsNeighbors.put("down", "Aliens1");
         space.put("Mars", marsNeighbors);
 
         return space;
@@ -82,36 +84,42 @@ public class Game {
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
         venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
         mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
+        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
+        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
         mars = new Planet("Mars", new ArrayList<>());
         planets.add(earth);
         planets.add(moon);
         planets.add(venus);
         planets.add(mercury);
         planets.add(mars);
+        planets.add(obstacle1);
         asteroids = createAsteroids(2, "large");
+        aliens = createAliens(2);
         starship = new Starship(earth);
         display = new HUD(starship, player1);
         level1 = new Level();
         space = drawGame();
         System.out.println(player1.getName());
-        play(player1, planets, asteroids, starship, display, level1);
+        play(player1, planets, asteroids, aliens, starship, display, level1);
     }
 
-    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, Starship starship, HUD display, Level level) throws InterruptedException {
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level) throws InterruptedException {
         Output.introNarrative();
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             // keep accepting commands from player and playing
             System.out.println("What's your next command?");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            TextParser.gamePlayScanner(command, player, planets, asteroids, starship, display, level, space);
+            TextParser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, display, level, space);
         }
         // else, loop breaks, ask the player if they'd like to start over
         if(player1.getHealth() <= 0) {
             // player died, start over?
+            System.out.println("player died.");
         }
         else if (starship.getHealth() <= 0) {
             // starship exploded, start over?
+            System.out.println("Starship exploded.");
         }
 
     }
@@ -127,8 +135,10 @@ public class Game {
 
     public ArrayList<Alien> createAliens(int numOfAliens){
         ArrayList<Alien> aliens = new ArrayList<>();
-        for(int i = 0; i <= numOfAliens; i++){
-            aliens.add(new Alien());
+        for(int i = 0; i < numOfAliens; i++){
+            // randomly pick left or right or up or down
+            //for now, i will hard code it to down
+            aliens.add(new Alien("down"));
         }
         return aliens;
     }

@@ -75,10 +75,23 @@ public class Output {
     }
 
     public static boolean dodgeAsteroid(Asteroid asteroid) {
-        String location = asteroid.position;
+        String location = asteroid.getPosition();
         System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
         System.out.println("An asteroid has appeared! \'dodge right\' or \'dodge left\'");
+        String input = scan.nextLine();
+        if(input.equals(location)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean shotAlien(Alien alien) {
+        String location = alien.getPosition();
+        System.out.println("location: " + location);
+        Scanner scan = new Scanner(System.in);
+        System.out.println("An alien is threatening you, \'shoot up\' or \'shoot down\'");
         String input = scan.nextLine();
         if(input.equals(location)) {
             return true;
