@@ -137,14 +137,13 @@ public class Game {
             // small - player has 50% chance of dodging. options: left, right
             Random rand = new Random();
             int random = rand.nextInt(12);
-            System.out.println("random: " + random);
             if(random < 6 && random % 2 == 0) {
                 position = "right";
             } else if (random < 6 && random % 2 != 0) {
                 position = "left";
             } else if (random >= 6 && random % 2 == 0) {
                 position = "up";
-            } else if (random >= 6 && random % 2 == 0) {
+            } else if (random >= 6 && random % 2 != 0) {
                 position = "down";
             }
             asteroids.add(new Asteroid(size, position));
@@ -160,14 +159,13 @@ public class Game {
             String position = "left";
             Random rand = new Random();
             int random = rand.nextInt(12);
-            System.out.println("randomAlien: " + random);
             if(random < 6 && random % 2 == 0) {
                 position = "right";
             } else if (random < 6 && random % 2 != 0) {
                 position = "left";
             } else if (random >= 6 && random % 2 == 0) {
                 position = "up";
-            } else if (random >= 6 && random % 2 == 0) {
+            } else if (random >= 6 && random % 2 != 0) {
                 position = "down";
             }
             aliens.add(new Alien(position));
