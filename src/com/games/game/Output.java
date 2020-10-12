@@ -41,17 +41,17 @@ public class Output {
         TimeUnit.SECONDS.sleep(1);
         System.out.println("I need your help...");
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("Okkkkkkkkkk...");
-        TimeUnit.SECONDS.sleep(1);
         pressAnyKeyToContinue();
-        System.out.println("There is an asteroid headed straight for us and the only way life as we know it will survive is if we move to Mars.");
+        System.out.println("There is an asteroid headed straight for us. \nMars is the next frontier for humanity.");
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("I world needs you, " + Player.getName() + ", to be the one who will fly the Starship to Mars, and plant the first seed. ");
+        pressAnyKeyToContinue();
+        System.out.println("The world needs you, " + Player.getName() + ", to be \nthe one who will fly the Starship to Mars, \nand plant the first seed. ");
         TimeUnit.SECONDS.sleep(2);
+        pressAnyKeyToContinue();
         System.out.println("Wow, but why me? I\'m not rea...");
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("We haven\'t a minute to waste! There\'s only one way you can possibly move from this screen and that\'s to the enter button.");
-        TimeUnit.SECONDS.sleep(1);
+        System.out.println("We haven\'t a minute to waste!");
+        TimeUnit.SECONDS.sleep(2);
         pressAnyKeyToContinue("Hit ENTER to blast off from Earth");
     }
 
@@ -60,7 +60,17 @@ public class Output {
     }
 
     public static void printAsteroidObstacle(Asteroid asteroid){
-        System.out.println("There is a " + asteroid.getSize() + " asteroid to your " + asteroid.getPosition() + ". Steer the opposite direction of the asteroid to avoid Starship damage.");
+        String size = asteroid.getSize();
+        if(size.equals("small"))  {
+            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
+                    "type \'right\' or \'left\' to try to dodge it.");
+        } else if (size.equals("medium")) {
+            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
+                    "type \'right\', \'left\', or \'down\' to try to dodge it.");
+        } else {
+            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
+                    "type \'right\', \'left\', \'down\', or \'up\' to try to dodge it.");
+        }
     }
     public static void printAlienObstacle(Alien alien){
         System.out.println("There is a an alien in your way. Shoot it to continue on without damage to your Starship and your health.");
@@ -78,7 +88,7 @@ public class Output {
         String location = asteroid.getPosition();
         System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
-        System.out.println("An asteroid has appeared! \'dodge right\' or \'dodge left\'");
+        printAsteroidObstacle(asteroid);
         String input = scan.nextLine();
         if(input.equals(location)) {
             return true;
@@ -91,7 +101,8 @@ public class Output {
         String location = alien.getPosition();
         System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
-        System.out.println("An alien is threatening you, \'shoot up\' or \'shoot down\'");
+        System.out.println("An alien is threatening you, \n" +
+                "type \'left\', \'right\', \'bottom\', or \'up\' to try to shoot them.");
         String input = scan.nextLine();
         if(input.equals(location)) {
             // alien.changePosition(alien);  sets a new position randomly

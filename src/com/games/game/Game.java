@@ -95,8 +95,8 @@ public class Game {
         planets.add(mars);
         planets.add(obstacle1);
         planets.add(obstacle2);
-        asteroids = createAsteroids(2, "large");
-        aliens = createAliens(2);
+        asteroids = createAsteroids(3, "large");
+        aliens = createAliens(3);
         starship = new Starship(earth);
         display = new HUD(starship, player1);
         level1 = new Level();
@@ -136,7 +136,7 @@ public class Game {
             // medium - player has 33% chance of dodging. options: up, left, right
             // small - player has 50% chance of dodging. options: left, right
             Random rand = new Random();
-            int random = rand.nextInt(11);
+            int random = rand.nextInt(12);
             System.out.println("random: " + random);
             if(random < 6 && random % 2 == 0) {
                 position = "right";
@@ -157,7 +157,20 @@ public class Game {
         for(int i = 0; i < numOfAliens; i++){
             // randomly pick left or right or up or down
             //for now, i will hard code it to down
-            aliens.add(new Alien("down"));
+            String position = "left";
+            Random rand = new Random();
+            int random = rand.nextInt(12);
+            System.out.println("randomAlien: " + random);
+            if(random < 6 && random % 2 == 0) {
+                position = "right";
+            } else if (random < 6 && random % 2 != 0) {
+                position = "left";
+            } else if (random >= 6 && random % 2 == 0) {
+                position = "up";
+            } else if (random >= 6 && random % 2 == 0) {
+                position = "down";
+            }
+            aliens.add(new Alien(position));
         }
         return aliens;
     }
