@@ -82,7 +82,7 @@ public class Game {
     public void begin() throws InterruptedException {
         player1 = new Player();
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
-        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk")));
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
         venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
         mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
         obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));

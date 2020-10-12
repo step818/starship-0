@@ -44,6 +44,15 @@ public class Player {
         this.name = input.nextLine();
     }
 
+    public boolean playerHasWeapon(){
+        for(String item : getInventory()){
+            if(item.equals("weapon")){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getItemToGrab() {
         return itemToGrab;
     }
