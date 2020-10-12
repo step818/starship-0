@@ -52,6 +52,15 @@ public class Player {
         }
         return false;
     }
+    public boolean playerHasShield(){
+        for(String item : getInventory()){
+            if(item.equals("shield")){
+                return true;
+            }
+        }
+        return false;
+
+    }
 
     public String getItemToGrab() {
         return itemToGrab;

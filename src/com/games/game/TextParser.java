@@ -14,10 +14,10 @@ public class TextParser {
     // do the same for familiar key directional nouns to be able to consult with functions that are looking for nav. input
     private Collection<String> goNouns = new ArrayList<>(Arrays.asList("moon", "up", "right", "left", "down", "straight", "back", "mercury", "mars"));
     // certain functions will need to parse for familiar items to use
-    private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
+    private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield", "fuel", "weapon", "food", "super laser", "scrap metal", "Elon Musk"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
+    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
             String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
             String verbCommand = inputSplit[0];
@@ -26,10 +26,8 @@ public class TextParser {
                 case "go":
                     scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space, player);
                     break;
-                case "use":
-                    scanUseNouns(inputSplit[1], verbCommand, player);
-                    break;
-                case "take":
+                case "use" :
+                    case "take":
                     scanUseNouns(inputSplit[1], verbCommand, player);
                     break;
                 case "show":
@@ -76,7 +74,7 @@ public class TextParser {
                         System.out.println("Dodged asteroid! Good job");
                     } else {
                         System.out.println("!!!@!%! Ouch!* Starship hit.");
-                        starship.setHealth(starship.getHealth() - 20);
+                        starship.takenDamage();
                     }
                 }
             } else if (neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Aliens")) {
@@ -91,15 +89,15 @@ public class TextParser {
                             alien.setHealth(alien.getHealth() - 50);
                             System.out.println("Direct hit! You hit the target!");
                             // while (alien.getHealth > 0) stay with it and kill him. change aliens position
-                            //until it dies, see if you can remove it from the list once dead
+                            // until it dies, see if you can remove it from the list once dead
                         }
                         else if(shot && !player.playerHasWeapon()){
                             System.out.println("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
-                            starship.setHealth(starship.getHealth() - 20);
+                            starship.takenDamage();
                         }
                         else {
                             System.out.println("Missed! Alien ship fired! Starship health: \'-20\'");
-                            starship.setHealth(starship.getHealth() - 20);
+                            starship.takenDamage();
                         }
                         count++;
                     }
@@ -113,14 +111,38 @@ public class TextParser {
         }
     }
 
-    public static void scanUseNouns(String noun, String verb, Player player) {
+    public void scanUseNouns(String noun, String verb, Player player) {
 // if the argument is valid useNoun, " "
+        boolean hasShield = useHalfDamage(player);
         if (verb.equals("use")) {
             System.out.println("you want to use " + noun + " ?");
+            for(String word : useNouns){
+                if(word.equals(noun) && word.equals("shield")){
+
+                }
+                if(word.equals(noun) && word.equals("Elon Musk")){
+                    System.out.println("Elon says he doesn't like feeling used.");
+                }
+            }
         }
         else if (verb.equals("take")){
-            System.out.println("you want to take " + noun + " ?");
-            player.setInventory(noun);
+          takeDelegator(noun, player);
         }
+    }
+
+    public void asteroidDodging(){
+        // move asteroid logic from scanGoNouns here?
+    }
+
+    public void alienFighting(){
+        // move alien logic from scanGoNouns here?
+    }
+
+    public boolean useHalfDamage(Player player){
+        return player.playerHasShield();
+    }
+    public void takeDelegator(String noun, Player player){
+        System.out.println("you want to take " + noun + " ?");
+        player.setInventory(noun);
     }
 }
