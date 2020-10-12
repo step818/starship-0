@@ -24,7 +24,7 @@ public class TextParser {
             // parse for the verb the user has chosen
             switch(verbCommand) {
                 case "go":
-                    scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space);
+                    scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space, player);
                     break;
                 case "use":
                     scanUseNouns(inputSplit[1], verbCommand, player);
@@ -50,7 +50,7 @@ public class TextParser {
         HUD.display();
     }
 
-    public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space) {
+    public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space, Player player) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
         // search the hashmap for VALID destinations
         HashMap<String, String> neighbors= space.get(starship.getCurrentLocation().getName());
@@ -87,13 +87,18 @@ public class TextParser {
                     while(alien.getHealth() > 0) {
                         System.out.println("Alien ship health: " + alien.getHealth());
                         boolean shot = Output.shotAlien(alien);
-                        if (shot) {
+                        if (shot && player.playerHasWeapon()) {
                             alien.setHealth(alien.getHealth() - 50);
                             System.out.println("Direct hit! You hit the target!");
                             // while (alien.getHealth > 0) stay with it and kill him. change aliens position
                             //until it dies, see if you can remove it from the list once dead
-                        } else {
-                            System.out.println("Missed! Alien ship fired back! Starship health: \'-20\'");
+                        }
+                        else if(shot && !player.playerHasWeapon()){
+                            System.out.println("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
+                            starship.setHealth(starship.getHealth() - 20);
+                        }
+                        else {
+                            System.out.println("Missed! Alien ship fired! Starship health: \'-20\'");
                             starship.setHealth(starship.getHealth() - 20);
                         }
                         count++;
