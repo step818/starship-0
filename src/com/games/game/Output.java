@@ -51,7 +51,7 @@ public class Output {
         System.out.println("Wow, but why me? I\'m not rea...");
         TimeUnit.SECONDS.sleep(1);
         System.out.println("We haven\'t a minute to waste!");
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(1);
         pressAnyKeyToContinue("Hit ENTER to blast off from Earth");
     }
 

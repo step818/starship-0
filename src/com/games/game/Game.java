@@ -106,10 +106,15 @@ public class Game {
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level) throws InterruptedException {
-        Output.introNarrative();
+//        Output.introNarrative();
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
+            // commandLineTable.main()
+            HUD hud = new HUD(starship, player);
+            hud.display();
             // keep accepting commands from player and playing
-            System.out.println("What's your next command?");
+            System.out.println("What's your next command? ");
+            System.out.println("++------------------------++");
+            System.out.print("Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
             TextParser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, display, level, space);

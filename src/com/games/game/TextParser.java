@@ -33,7 +33,7 @@ public class TextParser {
                     scanUseNouns(inputSplit[1], verbCommand, player);
                     break;
                 case "show":
-                    showStatus();
+                    showStatus(starship, player);
                     break;
                 default:
                     System.out.println("What exactly are you saying? ");
@@ -46,8 +46,9 @@ public class TextParser {
     }
 
     // print the user health, fuel, inventory, location
-    public static void showStatus() {
-        HUD.display();
+    public static void showStatus(Starship starship, Player player) {
+        HUD hud = new HUD(starship, player);
+        hud.display();
     }
 
     public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space, Player player) {
