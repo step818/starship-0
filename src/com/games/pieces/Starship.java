@@ -2,11 +2,12 @@ package com.games.pieces;
 
 public class Starship {
 
-    public int health = 100;
-    public int fuel = 100;
+    private static int health = 100;
+    private static int fuel = 100;
+    private static int damage = 20;
     public boolean inSpace = false;
-    public Planet currentLocation;
-    public String currentAsteroids;
+    public static Planet currentLocation;
+    public static String currentAsteroids;
     private static int Xpos = 1;
     private static int Ypos = 1;
 
@@ -14,7 +15,7 @@ public class Starship {
         setCurrentLocation(currentLocation);
     }
 
-    public int getHealth() {
+    public static int getHealth() {
         return health;
     }
 
@@ -22,12 +23,16 @@ public class Starship {
         this.health = health;
     }
 
-    public int getFuel() {
+    public static int getFuel() {
         return fuel;
     }
 
     public void setFuel(int fuel) {
         this.fuel = fuel;
+    }
+
+    public static int getDamage(){
+        return damage;
     }
 
     public boolean isInSpace() {
@@ -38,7 +43,7 @@ public class Starship {
         this.inSpace = inSpace;
     }
 
-    public Planet getCurrentLocation() {
+    public static Planet getCurrentLocation() {
         return currentLocation;
     }
 
@@ -46,7 +51,7 @@ public class Starship {
         this.currentLocation = location;
     }
 
-    public String getCurrentAsteroids() {
+    public static String getCurrentAsteroids() {
         return currentAsteroids;
     }
 
@@ -68,5 +73,12 @@ public class Starship {
 
     public static void setYpos(int ypos) {
         Ypos = ypos;
+    }
+
+    public void takenDamage(){
+        setHealth(getHealth() - getDamage());
+    }
+    public void takeHalfDamage(){
+        setHealth(getHealth() - (getDamage()/2));
     }
 }

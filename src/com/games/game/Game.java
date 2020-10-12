@@ -28,6 +28,7 @@ public class Game {
     Starship starship;
     HUD display;
     Level level1;
+    TextParser parser;
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
     //private static final int HEIGHT = 10;
 //   private static final int WIDTH = 10;
@@ -100,6 +101,7 @@ public class Game {
         starship = new Starship(earth);
         display = new HUD(starship, player1);
         level1 = new Level();
+        parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
         play(player1, planets, asteroids, aliens, starship, display, level1);
@@ -117,7 +119,7 @@ public class Game {
             System.out.print("Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            TextParser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, display, level, space);
+            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, display, level, space);
         }
         // else, loop breaks, ask the player if they'd like to start over
         if(player1.getHealth() <= 0) {
