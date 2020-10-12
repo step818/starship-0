@@ -60,21 +60,10 @@ public class Output {
     }
 
     public static void printAsteroidObstacle(Asteroid asteroid){
-        String size = asteroid.getSize();
-        if(size.equals("small"))  {
-            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
-                    "type \'right\' or \'left\' to try to dodge it.");
-        } else if (size.equals("medium")) {
-            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
-                    "type \'right\', \'left\', or \'down\' to try to dodge it.");
-        } else {
-            System.out.println("A " + size + " asteroid just appeared in front of you, \n" +
-                    "type \'right\', \'left\', \'down\', or \'up\' to try to dodge it.");
-        }
+        System.out.println("A " + asteroid.getSize() + " asteroid just appeared in front of you, \n" +
+                "type \'right\' or \'left\' to try to dodge it.");
     }
-    public static void printAlienObstacle(Alien alien){
-        System.out.println("There is a an alien in your way. Shoot it to continue on without damage to your Starship and your health.");
-    }
+
 //    different functions will store sections of the narrative.
 
 //    also, other functions will store responses to certain inputs guided from the text parser
@@ -90,11 +79,7 @@ public class Output {
         Scanner scan = new Scanner(System.in);
         printAsteroidObstacle(asteroid);
         String input = scan.nextLine();
-        if(input.equals(location)) {
-            return true;
-        } else {
-            return false;
-        }
+        return input.equals(location);
     }
 
     public static boolean shotAlien(Alien alien) {
@@ -104,11 +89,6 @@ public class Output {
         System.out.println("An alien is threatening you, \n" +
                 "type \'left\', \'right\', \'bottom\', or \'up\' to try to shoot them.");
         String input = scan.nextLine();
-        if(input.equals(location)) {
-            // alien.changePosition(alien);  sets a new position randomly
-            return true;
-        } else {
-            return false;
-        }
+        return input.equals(location);
     }
 }

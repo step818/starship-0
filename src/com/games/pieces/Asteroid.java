@@ -29,17 +29,4 @@ public class Asteroid {
     public void setPosition(String position) {
         this.position = position;
     }
-
-    // take health from starship
-    public void collide(){
-        if(size.equals("small")){
-            // take least damage
-        }
-        else if(size.equals("medium")){
-            // take more damage
-        }
-        else{
-            // take most damage
-        }
-    }
 }
