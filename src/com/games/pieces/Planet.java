@@ -12,7 +12,6 @@ public class Planet {
         setResources(resources);
     }
 
-
     public String getName() {
         return name;
     }

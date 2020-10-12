@@ -17,37 +17,31 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
-        String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
-        // parse for the verb the user has chosen
-        String verbCommand = inputSplit[0];
-        switch(verbCommand) {
-            case "go":
-                if(inputSplit[1].length() > 0){
-                    scanGoNouns(inputSplit[1], planets, starship, space);
-                }
-                else {
-                    System.out.println("Where do you want to " + verbCommand +"?");
-                }
-                break;
-            case "use":
-                if(inputSplit[1].length() > 0){
+    public static void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
+        try {
+            String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
+            String verbCommand = inputSplit[0];
+            // parse for the verb the user has chosen
+            switch(verbCommand) {
+                case "go":
+                    scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space);
+                    break;
+                case "use":
                     scanUseNouns(inputSplit[1], verbCommand, player);
-                }
-                else {
-                    System.out.println("How do you " + verbCommand +"?");
-                }
-                break;
-            case "take":
-                if(inputSplit[1].length() > 0){
+                    break;
+                case "take":
                     scanUseNouns(inputSplit[1], verbCommand, player);
-                }
-                break;
-            case "show":
-                showStatus();
-                break;
-            default:
-                System.out.println("What exactly are you saying? ");
+                    break;
+                case "show":
+                    showStatus();
+                    break;
+                default:
+                    System.out.println("What exactly are you saying? ");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayOutOfBoundsException: ");
+            System.out.println(e.getMessage());
+            System.out.println("Try again");
         }
     }
 
@@ -56,17 +50,58 @@ public class TextParser {
         HUD.display();
     }
 
-    public static void scanGoNouns(String noun, ArrayList<Planet> planets, Starship starship, HashMap<String, HashMap<String, String>> space) {
+    public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space) {
 // if the argument is a valid goNoun, then call the correct function to output the correct message
         // search the hashmap for VALID destinations
-        if (space.get(starship.getCurrentLocation().getName()).containsKey(noun)) {
+        HashMap<String, String> neighbors= space.get(starship.getCurrentLocation().getName());
+        if (neighbors.containsKey(noun)) {
             for(Planet planet : planets){
-                if(planet.getName().equals(space.get(starship.getCurrentLocation().getName()).get(noun))){
+                if(planet.getName().equals(neighbors.get(noun))){
                     starship.setCurrentLocation(planet);
-                    System.out.println("You just changed locations: " + starship.getCurrentLocation().getName());
+                    System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
+                    // if (we dealing with a planet and not an asteroid nor alien) {
+                    Output.uponArrivingOnPlanet(planet);
                     break;
                 }
             }
+            // if asteroids, make asteroid list, tell pleyer to WATCH OUT!, and allow player to try to dodge out of harms way
+            // if player hits asteroid, deduct health. set current location to asteroids
+            if(neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Asteroids")){
+                System.out.println("Boom! Its an asteroid field!");
+                starship.setCurrentAsteroids(neighbors.get(noun));
+                for(Asteroid asteroid : asteroids) {
+                    boolean dodged = Output.dodgeAsteroid(asteroid);
+                    // take damage or not based on a boolean if they dodged correctly
+                    if(dodged) {
+                        System.out.println("Dodged asteroid! Good job");
+                    } else {
+                        System.out.println("!!!@!%! Ouch!* Starship hit.");
+                        starship.setHealth(starship.getHealth() - 20);
+                    }
+                }
+            } else if (neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Aliens")) {
+                System.out.println("Boom! Its an alien ambush!");
+                starship.setInSpace(true);
+                for(Alien alien : aliens) {
+                    int count = 1;
+                    while(alien.getHealth() > 0) {
+                        System.out.println("Alien ship health: " + alien.getHealth());
+                        boolean shot = Output.shotAlien(alien);
+                        if (shot) {
+                            alien.setHealth(alien.getHealth() - 50);
+                            System.out.println("Direct hit! You hit the target!");
+                            // while (alien.getHealth > 0) stay with it and kill him. change aliens position
+                            //until it dies, see if you can remove it from the list once dead
+                        } else {
+                            System.out.println("Missed! Alien ship fired back! Starship health: \'-20\'");
+                            starship.setHealth(starship.getHealth() - 20);
+                        }
+                        count++;
+                    }
+                    System.out.println("You killed an alien ship! Success!");
+                }
+            }
+
         }
         else {
             System.out.println("You can\'t go that way.");
