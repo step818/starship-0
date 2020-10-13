@@ -17,7 +17,7 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield", "fuel", "weapon", "food", "super laser", "scrap metal", "Elon Musk"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
+    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
             String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
             String verbCommand = inputSplit[0];
@@ -31,7 +31,7 @@ public class TextParser {
                     scanUseNouns(inputSplit[1], verbCommand, player);
                     break;
                 case "show":
-                    showStatus(starship, player);
+                    showStatus(starship, player, hud);
                     break;
                 default:
                     System.out.println("What exactly are you saying? ");
@@ -44,9 +44,8 @@ public class TextParser {
     }
 
     // print the user health, fuel, inventory, location
-    public static void showStatus(Starship starship, Player player) {
-        HUD hud = new HUD(starship, player);
-        hud.display();
+    public static void showStatus(Starship starship, Player player, HUD hud) {
+        hud.display(starship.getCurrentLocation(), "");
     }
 
     public static void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space, Player player) {
@@ -57,9 +56,9 @@ public class TextParser {
             for(Planet planet : planets){
                 if(planet.getName().equals(neighbors.get(noun))){
                     starship.setCurrentLocation(planet);
-                    System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
+//                    System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
                     // if (we dealing with a planet and not an asteroid nor alien) {
-                    Output.uponArrivingOnPlanet(planet);
+//                    Output.uponArrivingOnPlanet(planet);
                     break;
                 }
             }
@@ -143,7 +142,7 @@ public class TextParser {
         return player.playerHasShield();
     }
     public void takeDelegator(String noun, Player player){
-        System.out.println("you want to take " + noun + " ?");
+        System.out.println("You want to take " + noun + "?");
         player.setInventory(noun);
     }
 }

@@ -5,6 +5,7 @@ import com.games.pieces.*;
 //import com.games.pieces.Player;
 //import com.games.pieces.Starship;
 
+import java.awt.desktop.OpenURIEvent;
 import java.lang.reflect.Array;
 
 
@@ -26,7 +27,8 @@ public class Game {
     ArrayList<Asteroid> asteroids;
     ArrayList<Alien> aliens;
     Starship starship;
-    HUD display;
+    HUD hud;
+    Output output = new Output();
     Level level1;
     TextParser parser;
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
@@ -99,27 +101,24 @@ public class Game {
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
         starship = new Starship(earth);
-        display = new HUD(starship, player1);
+        hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
-        play(player1, planets, asteroids, aliens, starship, display, level1);
+        play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 
-    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level) throws InterruptedException {
-//        Output.introNarrative();
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
+//        output.introNarrative(player);
+        String prompt = "";
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
-            // commandLineTable.main()
-            HUD hud = new HUD(starship, player);
-            hud.display();
+            this.hud.display(starship.getCurrentLocation(), prompt);
             // keep accepting commands from player and playing
-            System.out.println("What's your next command? ");
-            System.out.println("++------------------------++");
-            System.out.print("Input: ");
+            System.out.print("|| Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, display, level, space);
+            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
         }
         // else, loop breaks, ask the player if they'd like to start over
         if(player1.getHealth() <= 0) {
