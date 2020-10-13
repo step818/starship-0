@@ -5,6 +5,7 @@ public class Starship {
     private static int health = 100;
     private static int fuel = 100;
     private static int damage = 20;
+    private static int fuelUsed = 10;
     public boolean inSpace = false;
     public static Planet currentLocation;
     public static String currentAsteroids;
@@ -80,5 +81,11 @@ public class Starship {
     }
     public void takeHalfDamage(){
         setHealth(getHealth() - (getDamage()/2));
+    }
+    public void burnFuel(){
+        setFuel(getFuel() - fuelUsed);
+    }
+    public void refuel(){
+        setFuel(getFuel() + (100-getFuel()));
     }
 }

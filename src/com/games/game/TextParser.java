@@ -2,7 +2,7 @@ package com.games.game;
 
 import com.games.pieces.Player;
 import com.games.pieces.*;
-import com.games.game.Game;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +28,7 @@ public class TextParser {
                     break;
                 case "use" :
                     case "take":
-                    scanUseNouns(inputSplit[1], verbCommand, player);
+                    takeUseDelegator(inputSplit[1], verbCommand, player, starship);
                     break;
                 case "show":
                     showStatus();
@@ -55,6 +55,7 @@ public class TextParser {
         if (neighbors.containsKey(noun)) {
             for(Planet planet : planets){
                 if(planet.getName().equals(neighbors.get(noun))){
+                    starship.burnFuel();
                     starship.setCurrentLocation(planet);
                     System.out.println("You have arrived --> " + starship.getCurrentLocation().getName());
                     // if (we dealing with a planet and not an asteroid nor alien) {
@@ -111,23 +112,44 @@ public class TextParser {
         }
     }
 
-    public void scanUseNouns(String noun, String verb, Player player) {
+    public void takeUseDelegator(String noun, String verb, Player player, Starship starship) {
 // if the argument is valid useNoun, " "
         boolean hasShield = useHalfDamage(player);
         if (verb.equals("use")) {
             System.out.println("you want to use " + noun + " ?");
-            for(String word : useNouns){
-                if(word.equals(noun) && word.equals("shield")){
-
-                }
-                if(word.equals(noun) && word.equals("Elon Musk")){
-                    System.out.println("Elon says he doesn't like feeling used.");
-                }
-            }
+            whichItemToCallUseWith(noun, player, starship);
         }
         else if (verb.equals("take")){
-          takeDelegator(noun, player);
+          take(noun, player);
         }
+    }
+
+    // scan the planet's resources and make sure you can take/use whatever noun passed in
+    // pop that resource out of the Planet's collection
+    public void whichItemToCallUseWith(String noun, Player player, Starship starship){
+        for(String word : useNouns){
+            if(word.equals(noun)){
+                use(noun, player, starship);
+            }
+        }
+    }
+    public void use(String noun, Player player, Starship starship){
+        switch(noun){
+            case "shield":
+                starship.takeHalfDamage();
+                break;
+            case "fuel":
+                starship.refuel();
+                // remove fuel from player's inventory
+                break;
+            case "Elon Musk":
+                System.out.println("Elon says he doesn't like feeling used.");
+                break;
+        }
+    }
+    public void take(String noun, Player player){
+        System.out.println("you want to take " + noun + " ?");
+        player.setInventory(noun);
     }
 
     public void asteroidDodging(){
@@ -140,9 +162,5 @@ public class TextParser {
 
     public boolean useHalfDamage(Player player){
         return player.playerHasShield();
-    }
-    public void takeDelegator(String noun, Player player){
-        System.out.println("you want to take " + noun + " ?");
-        player.setInventory(noun);
     }
 }
