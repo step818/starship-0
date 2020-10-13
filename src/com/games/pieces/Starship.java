@@ -11,6 +11,7 @@ public class Starship {
     public static String currentAsteroids;
     private static int Xpos = 1;
     private static int Ypos = 1;
+    private static boolean playerCanUseShield = false;
 
     public Starship(Planet currentLocation){
         setCurrentLocation(currentLocation);
@@ -76,6 +77,14 @@ public class Starship {
         Ypos = ypos;
     }
 
+    public static boolean getPlayerCanUseShield() {
+        return playerCanUseShield;
+    }
+
+    public static void setPlayerCanUseShield(boolean playerCanUseShield) {
+        Starship.playerCanUseShield = playerCanUseShield;
+    }
+
     public void takenDamage(){
         setHealth(getHealth() - getDamage());
     }
@@ -88,4 +97,5 @@ public class Starship {
     public void refuel(){
         setFuel(getFuel() + (100-getFuel()));
     }
+
 }
