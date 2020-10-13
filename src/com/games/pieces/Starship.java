@@ -17,7 +17,7 @@ public class Starship {
         setCurrentLocation(currentLocation);
     }
 
-    public static int getHealth() {
+    public int getHealth() {
         return health;
     }
 
@@ -45,7 +45,7 @@ public class Starship {
         this.inSpace = inSpace;
     }
 
-    public static Planet getCurrentLocation() {
+    public Planet getCurrentLocation() {
         return currentLocation;
     }
 

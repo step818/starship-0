@@ -16,7 +16,7 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield", "fuel", "weapon", "food", "super laser", "scrap metal", "Elon Musk"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD display, Level level, HashMap<String, HashMap<String, String>> space) {
+    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
             String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
             String verbCommand = inputSplit[0];
@@ -30,7 +30,7 @@ public class TextParser {
                     takeUseDelegator(inputSplit[1], verbCommand, player, starship);
                     break;
                 case "show":
-                    showStatus();
+                    showStatus(hud);
                     break;
                 default:
                     System.out.println("What exactly are you saying? ");
@@ -43,8 +43,8 @@ public class TextParser {
     }
 
     // print the user health, fuel, inventory, location
-    public static void showStatus() {
-        HUD.display();
+    public static void showStatus(HUD hud) {
+//        hud.display();
     }
 
     public void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space, Player player) {

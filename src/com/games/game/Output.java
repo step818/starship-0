@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Output {
 
+    public String message;
+
     public static void pressAnyKeyToContinue(String message) {
         System.out.println(message);
         try {
@@ -28,14 +30,14 @@ public class Output {
         }
     }
 
-    public static void introNarrative() throws InterruptedException {
+    public static void introNarrative(Player player) throws InterruptedException {
         // The story begins, fill the user in with their mission
         TimeUnit.SECONDS.sleep(1);
         System.out.println("ring ring...");
         TimeUnit.SECONDS.sleep(1);
         System.out.println("Hello...");
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("Hi " + Player.getName() + ". ");
+        System.out.println("Hi " + player.getName() + ". ");
         TimeUnit.SECONDS.sleep(1);
         System.out.println("This is Elon Musk calling.");
         TimeUnit.SECONDS.sleep(1);
@@ -45,13 +47,13 @@ public class Output {
         System.out.println("There is an asteroid headed straight for us. \nMars is the next frontier for humanity.");
         TimeUnit.SECONDS.sleep(2);
         pressAnyKeyToContinue();
-        System.out.println("The world needs you, " + Player.getName() + ", to be \nthe one who will fly the Starship to Mars, \nand plant the first seed. ");
+        System.out.println("The world needs you, " + player.getName() + ", to be \nthe one who will fly the Starship to Mars, \nand plant the first seed. ");
         TimeUnit.SECONDS.sleep(2);
         pressAnyKeyToContinue();
         System.out.println("Wow, but why me? I\'m not rea...");
         TimeUnit.SECONDS.sleep(1);
         System.out.println("We haven\'t a minute to waste!");
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(1);
         pressAnyKeyToContinue("Hit ENTER to blast off from Earth");
     }
 
@@ -75,7 +77,6 @@ public class Output {
 
     public static boolean dodgeAsteroid(Asteroid asteroid) {
         String location = asteroid.getPosition();
-        System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
         printAsteroidObstacle(asteroid);
         String input = scan.nextLine();
@@ -90,5 +91,22 @@ public class Output {
                 "type \'left\', \'right\', \'bottom\', or \'up\' to try to shoot them.");
         String input = scan.nextLine();
         return input.equals(location);
+    }
+
+    public String HAL9000(String message) {
+        String def = "What\'s your next command?";
+        if (message.length() > 1) {
+            return message;
+        } else {
+            return def;
+        }
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

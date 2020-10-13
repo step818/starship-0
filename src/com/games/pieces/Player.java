@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Player {
-    private static int health = 100;
-    private static ArrayList<String> inventory = new ArrayList<>();
-    public static String name;
+    private int health = 100;
+    private ArrayList<String> inventory = new ArrayList<>();
+    public String name;
     public String itemToGrab;
 
 
@@ -18,7 +18,7 @@ public class Player {
         setName();
     }
 
-    public static int getHealth() {
+    public int getHealth() {
         return health;
     }
 
@@ -26,7 +26,7 @@ public class Player {
         this.health = health;
     }
 
-    public static ArrayList<String> getInventory() {
+    public ArrayList<String> getInventory() {
         return inventory;
     }
 
@@ -34,7 +34,7 @@ public class Player {
         this.inventory.add(item);
     }
 
-    public static String getName() {
+    public String getName() {
         return name;
     }
 
