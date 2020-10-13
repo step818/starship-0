@@ -21,19 +21,22 @@ public class HUD {
         this.output = output;
     }
 
-    public void display(Planet currentLocation, String prompt) {
+    public void display(Planet currentLocation) {
         System.out.println("++---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("||  Player inventory: " + player.getInventory() +"     ||    Starship health: " + starship.getHealth() + "     ||    Fuel level: " + starship.getFuel() + "                  ||");
         System.out.println("++---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("+----------------------------++-----------------------------++-------------------------------------++");
         System.out.println("||  Current location: " + currentLocation.getName() + "  ||          HAL 9000           ||  Directions: left, right, up, down  ||" );
         System.out.println("||                           ||            ((0))            ||                                     ||");
-        System.out.println("||                           ||  "+ output.HAL9000(prompt)+"  ||                                     ||");
+        System.out.println("||                           ||  "+ output.getMessage()+"  ||                                     ||");
         System.out.println("||---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
         System.out.println("||  Controls: go, take, use  ||  Resources found:" + currentLocation.getResources() + "                                     ||");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
     }
 
+    public void think(String thoughts) {
+        output.setMessage(thoughts);
+    }
 
 }

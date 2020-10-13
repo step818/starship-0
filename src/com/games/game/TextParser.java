@@ -27,13 +27,13 @@ public class TextParser {
                     break;
                 case "use" :
                     case "take":
-                    takeUseDelegator(inputSplit[1], verbCommand, player, starship);
+                    takeUseDelegator(inputSplit[1], verbCommand, player, starship, hud);
                     break;
                 case "show":
-                    showStatus(hud);
+                    showStatus(hud, starship);
                     break;
                 default:
-                    System.out.println("What exactly are you saying? ");
+                    hud.think("What exactly are you saying?");
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("ArrayOutOfBoundsException: ");
@@ -43,8 +43,9 @@ public class TextParser {
     }
 
     // print the user health, fuel, inventory, location
-    public static void showStatus(HUD hud) {
-//        hud.display();
+    public static void showStatus(HUD hud,Starship starship) {
+        Planet currentLocation = starship.getCurrentLocation();
+        hud.display(currentLocation);
     }
 
     public void scanGoNouns(String noun, ArrayList<Planet> planets,ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HashMap<String, HashMap<String, String>> space, Player player) {
@@ -135,14 +136,14 @@ public class TextParser {
             System.out.println("You killed an alien ship! Success!");
         }
     }
-    public void takeUseDelegator(String noun, String verb, Player player, Starship starship) {
+    public void takeUseDelegator(String noun, String verb, Player player, Starship starship, HUD hud) {
 // if the argument is valid useNoun, " "
         if (verb.equals("use")) {
             System.out.println("you want to use " + noun + " ?");
             whichItemToCallUseWith(noun, player, starship);
         }
         else if (verb.equals("take")){
-          take(noun, player);
+          take(noun, player, hud);
         }
     }
 
@@ -172,8 +173,8 @@ public class TextParser {
                 System.out.println("Looks like you don't have one of those.");
         }
     }
-    public void take(String noun, Player player){
-        System.out.println("you want to take " + noun + " ?");
+    public void take(String noun, Player player, HUD hud){
+        hud.think("You want to take " +noun);
         player.setInventory(noun);
     }
 }

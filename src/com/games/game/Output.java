@@ -93,20 +93,15 @@ public class Output {
         return input.equals(location);
     }
 
-    public String HAL9000(String message) {
-        String def = "What\'s your next command?";
-        if (message.length() > 1) {
-            return message;
-        } else {
-            return def;
-        }
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        if (message.length() < 1) {
+            this.message = "What\'s your next command?";
+        } else {
+            this.message = message;
+        }
     }
 }
