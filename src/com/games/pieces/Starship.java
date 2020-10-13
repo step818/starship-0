@@ -5,11 +5,13 @@ public class Starship {
     private static int health = 100;
     private static int fuel = 100;
     private static int damage = 20;
+    private static int fuelUsed = 10;
     public boolean inSpace = false;
     public static Planet currentLocation;
     public static String currentAsteroids;
     private static int Xpos = 1;
     private static int Ypos = 1;
+    private static boolean playerCanUseShield = false;
 
     public Starship(Planet currentLocation){
         setCurrentLocation(currentLocation);
@@ -75,10 +77,25 @@ public class Starship {
         Ypos = ypos;
     }
 
+    public static boolean getPlayerCanUseShield() {
+        return playerCanUseShield;
+    }
+
+    public static void setPlayerCanUseShield(boolean playerCanUseShield) {
+        Starship.playerCanUseShield = playerCanUseShield;
+    }
+
     public void takenDamage(){
         setHealth(getHealth() - getDamage());
     }
     public void takeHalfDamage(){
         setHealth(getHealth() - (getDamage()/2));
     }
+    public void burnFuel(){
+        setFuel(getFuel() - fuelUsed);
+    }
+    public void refuel(){
+        setFuel(getFuel() + (100-getFuel()));
+    }
+
 }

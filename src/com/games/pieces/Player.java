@@ -59,7 +59,6 @@ public class Player {
             }
         }
         return false;
-
     }
 
     public String getItemToGrab() {
