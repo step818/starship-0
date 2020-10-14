@@ -14,6 +14,8 @@ public class Main {
         System.out.println("Welcome to Starship");
         Game game = new Game();
         game.begin();
+        // for game board, call the game.begin() below
+        // game.begin(80,24);
 //        Earth.draw();
 //        Moon.draw();
 

@@ -125,6 +125,7 @@ public class TextParser {
                 }
                 else if(shot && !player.playerHasWeapon()){
                     hud.think("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
+                    // player health should go down
                     starship.takenDamage();
                 }
                 else {
