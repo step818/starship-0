@@ -12,8 +12,6 @@ public class Player {
     public String name;
     public String itemToGrab;
 
-
-
     public Player() {
         setName();
     }
