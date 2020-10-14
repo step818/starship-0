@@ -95,7 +95,7 @@ public class Game {
     }
 
 //  Business Methods
-    public void begin() throws InterruptedException {
+    public void begin(int screenWidth, int screenHeight) throws InterruptedException {
         player1 = new Player('@', Color.yellow, 10, 10);
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
