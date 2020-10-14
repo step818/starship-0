@@ -85,7 +85,6 @@ public class Output {
 
     public static boolean shotAlien(Alien alien) {
         String location = alien.getPosition();
-        System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
         System.out.println("An alien is threatening you, \n" +
                 "type \'left\', \'right\', \'bottom\', or \'up\' to try to shoot them.");
@@ -93,20 +92,15 @@ public class Output {
         return input.equals(location);
     }
 
-    public String HAL9000(String message) {
-        String def = "What\'s your next command?";
-        if (message.length() > 1) {
-            return message;
-        } else {
-            return def;
-        }
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        if (message.length() < 1) {
+            this.message = "What\'s your next command?";
+        } else {
+            this.message = message;
+        }
     }
 }
