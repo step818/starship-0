@@ -85,7 +85,6 @@ public class Output {
 
     public static boolean shotAlien(Alien alien) {
         String location = alien.getPosition();
-        System.out.println("location: " + location);
         Scanner scan = new Scanner(System.in);
         System.out.println("An alien is threatening you, \n" +
                 "type \'left\', \'right\', \'bottom\', or \'up\' to try to shoot them.");

@@ -27,8 +27,8 @@ public class HUD {
         System.out.println("++---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("+----------------------------++-----------------------------++-------------------------------------++");
         System.out.println("||  Current location: " + currentLocation.getName() + "  ||          HAL 9000           ||  Directions: left, right, up, down  ||" );
-        System.out.println("||                           ||            ((0))            ||                                     ||");
-        System.out.println("||                           ||  "+ output.getMessage()+"  ||                                     ||");
+        System.out.println("||                           ||            ((0))            ++-------------------------------------||");
+        System.out.println("||                           ||  "+ output.getMessage()+"       ||      What\'s your next command?     ||");
         System.out.println("||---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
         System.out.println("||  Controls: go, take, use  ||  Resources found:" + currentLocation.getResources() + "                                     ||");
