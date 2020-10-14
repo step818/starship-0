@@ -5,8 +5,12 @@ import com.games.pieces.*;
 //import com.games.pieces.Player;
 //import com.games.pieces.Starship;
 
+import java.awt.*;
 import java.awt.desktop.OpenURIEvent;
 import java.lang.reflect.Array;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 
 import java.util.*;
@@ -32,6 +36,15 @@ public class Game {
     Level level1;
     TextParser parser;
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
+
+    private Rectangle gameScreenRec;
+    private GameArea gameScreen;
+    private boolean isRunning;
+    private static final int mapWidth = 100;
+    private static final int mapHeight = 100;
+    private int framesPerSecond = 60;
+    private int timePerLoop = 1000000000 / framesPerSecond;
+
     //private static final int HEIGHT = 10;
 //   private static final int WIDTH = 10;
 
@@ -82,8 +95,8 @@ public class Game {
     }
 
 //  Business Methods
-    public void begin() throws InterruptedException {
-        player1 = new Player();
+    public void begin(int screenWidth, int screenHeight) throws InterruptedException {
+        player1 = new Player('@', Color.yellow, 10, 10);
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
         venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
@@ -107,6 +120,7 @@ public class Game {
         space = drawGame();
         System.out.println(player1.getName());
         play(player1, planets, asteroids, aliens, starship, hud, level1);
+        run();
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
@@ -178,5 +192,57 @@ public class Game {
             aliens.add(new Alien(position));
         }
         return aliens;
+    }
+
+    public void processInput() {
+        InputEvent event = gameScreen.getNextInput();
+        if (event instanceof KeyEvent) {
+            KeyEvent keypress = (KeyEvent)event;
+            switch (keypress.getKeyCode()){
+                case KeyEvent.VK_LEFT:
+                    player1.move(-1, 0);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    player1.move(1, 0); break;
+                case KeyEvent.VK_UP:
+                    player1.move(0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    player1.move(0, 1);
+                    break;
+            }
+        } else if (event instanceof MouseEvent) {
+            //
+        }
+    }
+    public void render(){
+        //gameScreen.pointCameraAt(world, player.getX(), player.getY());
+        gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
+        //gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
+        gameScreen.refresh();
+    }
+
+    public void run() {
+        isRunning = true;
+
+        while(isRunning) {
+            long startTime = System.nanoTime();
+
+            processInput();
+            render();
+
+            long endTime = System.nanoTime();
+
+            long sleepTime = timePerLoop - (endTime-startTime);
+
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime/1000000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
