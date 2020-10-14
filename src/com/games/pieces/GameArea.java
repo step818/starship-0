@@ -50,8 +50,8 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         int spx;
         int spy;
 
-        spx = player1.getX() - origin.x;
-        spy = player1.getY() - origin.y;
+        spx = player1.getPlayerPositionX() - origin.x;
+        spy = player1.getPlayerPositionY() - origin.y;
 
         if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height)) {
             terminal.write(player1.getPlayerChar(), spx, spy, player1.getPlayerColor(), Color.black);
