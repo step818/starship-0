@@ -124,7 +124,7 @@ public class Game {
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
-//        output.introNarrative(player);
+        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.think(initialThoughts);
         while(player1.getHealth() > 0 && starship.getHealth() > 0){

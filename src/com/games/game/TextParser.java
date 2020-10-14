@@ -95,17 +95,18 @@ public class TextParser {
                     if(response.equals("y")){
                         use("shield", player, hud, starship);
                         if(usedShield){
-                            starship.takeHalfDamage();
+                            starship.takenDamage(10);
                             hud.think("Half damage taken");
                         }
                     }
                     else {
-                        starship.takenDamage();
+                        // pass a certain amount of damage in to this method instead of fixed amount?
+                        starship.takenDamage(20);
                         hud.think("!!!@!%! Ouch!* Starship hit.");
                     }
                 }
                 else{
-                    starship.takenDamage();
+                    starship.takenDamage(20);
                     hud.think("!!!@!%! Ouch!* Starship hit.");
                 }
             }
@@ -126,11 +127,12 @@ public class TextParser {
                 else if(shot && !player.playerHasWeapon()){
                     hud.think("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
                     // player health should go down
-                    starship.takenDamage();
+                    // pass a certain amount of damage in to this method instead of fixed amount?
+                    starship.takenDamage(10);
                 }
                 else {
                     hud.think("Missed! Alien ship fired! Starship health: \'-20\'");
-                    starship.takenDamage();
+                    starship.takenDamage(10);
                 }
                 count++;
             }
