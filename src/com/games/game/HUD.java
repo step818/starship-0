@@ -28,7 +28,9 @@ public class HUD {
         System.out.println("+----------------------------++-----------------------------++-------------------------------------++");
         System.out.println("||  Current location: " + currentLocation.getName() + "  ||          HAL 9000           ||  Directions: left, right, up, down  ||" );
         System.out.println("||                           ||            ((0))            ++-------------------------------------||");
-        System.out.println("||                           ||  "+ output.getMessage()+"       ||      What\'s your next command?     ||");
+        System.out.print("||                           ||     ");
+        System.out.print(output.getMessage());
+        System.out.println("  ||      What\'s your next command?     ||");
         System.out.println("||---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
         System.out.println("||  Controls: go, take, use  ||  Resources found:" + currentLocation.getResources() + "                                     ||");
@@ -39,4 +41,27 @@ public class HUD {
         output.setMessage(thoughts);
     }
 
+    public Starship getStarship() {
+        return starship;
+    }
+
+    public void setStarship(Starship starship) {
+        this.starship = starship;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Output getOutput() {
+        return output;
+    }
+
+    public void setOutput(Output output) {
+        this.output = output;
+    }
 }

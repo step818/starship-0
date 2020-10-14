@@ -57,9 +57,7 @@ public class TextParser {
                 if(planet.getName().equals(neighbors.get(noun))){
                     starship.burnFuel();
                     starship.setCurrentLocation(planet);
-                    hud.think("You have arrived --> " + starship.getCurrentLocation().getName());
-                    // if (we dealing with a planet and not an asteroid nor alien) {
-                    Output.uponArrivingOnPlanet(planet);
+                    hud.think("You have arrived at " + starship.getCurrentLocation().getName());
                     break;
                 }
             }
