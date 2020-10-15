@@ -128,7 +128,7 @@ public class Game {
         output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
-        //run();
+//        run();
         while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
