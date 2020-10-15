@@ -1,6 +1,5 @@
 package com.games.game;
 
-import com.games.client.Main;
 import com.games.pieces.*;
 //import com.games.pieces.Planet;
 //import com.games.pieces.Player;
@@ -128,10 +127,8 @@ public class Game {
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
         output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
-        hud.think(initialThoughts);
-        // tried putting run here, in the begin method before calling play(), and inside while loop
-        // board pops up, but game won't play past "press ENTER to blast off from earth"
-        // run();
+        hud.prompt1(initialThoughts);
+        //run();
         while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
