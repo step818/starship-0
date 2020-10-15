@@ -8,6 +8,7 @@ import java.util.*;
 public class TextParser {
     private boolean usedShield;
     private static boolean inAsteroidBattle = false;
+    private static boolean inAlienBattle = false;
 
     // create a list of familiar key verbs
     private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use", "take"));
@@ -20,9 +21,13 @@ public class TextParser {
     public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
             if(inAsteroidBattle) {
-                // check if dodge input matches with asteroid.getlocation()
+                // check if dodge input matches
                 asteroidCollision(input, asteroids, hud, starship);
-            } else {
+            } else if (inAlienBattle) {
+                // check if shoot input matches
+                alienFighting(input, aliens, player, hud, starship);
+            }
+            else {
                 String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
                 String verbCommand = inputSplit[0];
                 // parse for the verb the user has chosen
@@ -66,17 +71,19 @@ public class TextParser {
                     break;
                 }
             }
-            // if asteroids, make asteroid list, tell pleyer to WATCH OUT!, and allow player to try to dodge out of harms way
+            // if asteroids, make asteroid list, tell player to WATCH OUT!, and allow player to try to dodge out of harms way
             // if player hits asteroid, deduct health. set current location to asteroids
             if(neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Asteroids")){
                 // pass a boolean to let hal know that you are in an asteroid battle
                 setInAsteroidBattle(true);
-                hud.prompt1("Boom! Its an asteroid field! Dodge left right up or down.");
+                hud.prompt1("Boom! Its an asteroid field!");
+                hud.prompt2("Type left, right, up, or down to dodge a randomly placed asteroid.");
 
             } else if (neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Aliens")) {
-//                hud.think("Boom! Its an alien ambush!");
                 starship.setInSpace(true);
-                alienFighting(aliens, player, hud, starship);
+                setInAlienBattle(true);
+                hud.prompt1("Alien attack!");
+                hud.prompt2("Type left, right, up, or, down to shoot a randomly placed alien ship.");
             }
         }
         else {
@@ -85,9 +92,9 @@ public class TextParser {
     }
 
     public void asteroidCollision(String input, ArrayList<Asteroid> asteroids, HUD hud, Starship starship) {
-        String location = asteroids.get(0).getPosition();
+        String astLocation = asteroids.get(0).getPosition();
         // check if user's input
-        if (input.equals(location)) {
+        if (input.equals(astLocation)) {
             hud.prompt1("Phwew dodged it");
             asteroids.remove(0);
         } else {
@@ -107,63 +114,31 @@ public class TextParser {
         }
     }
 
-//    public void potentialAsteroidCollision(ArrayList<Asteroid> asteroids, Player player, HUD hud, Starship starship){
-//        for(Asteroid asteroid : asteroids) {
-//            boolean dodged = hud.getOutput().dodgeAsteroid(asteroid);
-////             take damage or not based on a boolean if they dodged correctly
-//            if(dodged) {
-//                hud.prompt1("Dodged asteroid! Good job");
-//            } else {
-//                if(player.playerHasShield()){
-//                    hud.prompt1("Looks like you have a shield. Type \'y\' to use shield and take on less damage.");
-//                    Scanner input = new Scanner(System.in);
-//                    String response = input.nextLine().toLowerCase();
-//                    if(response.equals("y")){
-//                        use("shield", player, hud, starship);
-//                        if(usedShield){
-//                            starship.takeHalfDamage();
-//                            hud.prompt1("Half damage taken");
-//                        }
-//                    }
-//                    else {
-//                        starship.takenDamage();
-//                        hud.prompt1("!!!@!%! Ouch!* Starship hit.");
-//                    }
-//                }
-//                else{
-//                    starship.takenDamage();
-//                    hud.prompt1("!!!@!%! Ouch!* Starship hit.");
-//                }
-//            }
-//        }
-//    }
-    public void alienFighting(ArrayList<Alien> aliens, Player player, HUD hud, Starship starship){
-        for(Alien alien : aliens) {
-            int count = 1;
-            while(alien.getHealth() > 0) {
-                hud.prompt1("Alien ship health: " + alien.getHealth());
-                boolean shot = Output.shotAlien(alien);
-                if (shot && player.playerHasWeapon()) {
-                    alien.setHealth(alien.getHealth() - 50);
-                    hud.prompt1("Direct hit! You hit the target!");
-                    // while (alien.getHealth > 0) stay with it and kill him. change aliens position
-                    // until it dies, see if you can remove it from the list once dead
-                }
-                else if(shot && !player.playerHasWeapon()){
-                    hud.prompt1("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
-                    // player health should go down
-                    // pass argument int to takeDAmage
-                    starship.takenDamage();
-                }
-                else {
-                    hud.prompt1("Missed! Alien ship fired! Starship health: \'-20\'");
-                    starship.takenDamage();
-                }
-                count++;
+    public void alienFighting(String input, ArrayList<Alien> aliens, Player player, HUD hud, Starship starship){
+        String alienLocation = aliens.get(0).getPosition();
+        if (input.equals(alienLocation) && player.playerHasWeapon()) {
+            aliens.get(0).setHealth(aliens.get(0).getHealth() - 50);
+            hud.prompt1("Target hit! Alien ship health: " + aliens.get(0).getHealth() + "%");
+            if (aliens.get(0).getHealth() <=0 ) {
+                hud.prompt1("Alien destroyed!");
+                aliens.remove(0);
             }
-            hud.prompt1("You killed an alien ship! Success!");
+        } else {
+            if(usedShield) {
+                starship.takeHalfDamage();
+            } else {
+                starship.takenDamage();
+            }
+            hud.prompt1("Starship hit! Health decreased!");
+        }
+        if (aliens.size() <= 0) {
+            inAlienBattle = false;
+            hud.prompt2("You made it passed the aliens.");
+        } else {
+            hud.prompt2("There\'s another alien, which way do you want to steer?");
         }
     }
+
     public void takeUseDelegator(String noun, String verb, Player player, Starship starship, HUD hud) {
 // if the argument is valid useNoun, " "
         if (verb.equals("use")) {
@@ -214,5 +189,13 @@ public class TextParser {
 
     public static void setInAsteroidBattle(boolean inAsteroidBattle) {
         TextParser.inAsteroidBattle = inAsteroidBattle;
+    }
+
+    public static boolean isInAlienBattle() {
+        return inAlienBattle;
+    }
+
+    public static void setInAlienBattle(boolean inAlienBattle) {
+        TextParser.inAlienBattle = inAlienBattle;
     }
 }
