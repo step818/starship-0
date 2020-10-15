@@ -132,7 +132,7 @@ public class Game {
         // tried putting run here, in the begin method before calling play(), and inside while loop
         // board pops up, but game won't play past "press ENTER to blast off from earth"
         // run();
-        while(player1.getHealth() > 0 && starship.getHealth() > 0){
+        while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
             System.out.print("|| Input: ");
@@ -141,23 +141,41 @@ public class Game {
             parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
         }
          // else, loop breaks, ask the player if they'd like to start over
-        if(player1.getHealth() <= 0 || starship.getFuel() <= 0 || starship.getHealth() <= 0) {
-            // System.out.println("Game over. Enter \'y\' to play again or \'n\' to exit.");
-            Scanner input = new Scanner(System.in);
-            String command = input.nextLine().toLowerCase();
-                while(!command.equals("y") && !command.equals("n")){
-                    System.out.println("Invalid choice. Enter y or n. \n Do you want to try again?");
-                    command = input.nextLine().toLowerCase();
-                }
-            if(command.equals("y")){
-                this.begin(80, 24);
+        if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
+            if(starship.getCurrentLocation() == mars){
+                System.out.println("You made it to Mars! Congratulations.");
             }
-            else {
-                System.exit(0);
+            else{
+                System.out.println("Game over. Enter \'y\' to play again or \'n\' to exit.");
             }
+            restartOrClose();
         }
     }
 
+    public void restartOrClose() throws InterruptedException{
+        if(startOverPrompt()){
+            this.begin(80, 24);
+        }
+        else{
+            System.exit(0);
+        }
+    }
+    public boolean startOverPrompt(){
+        Scanner input = new Scanner(System.in);
+        String command = input.nextLine().toLowerCase();
+        while(!command.equals("y") && !command.equals("n")){
+            System.out.println("Invalid choice. Enter y or n. \n Do you want to try again?");
+            command = input.nextLine().toLowerCase();
+        }
+        if(command.equals("y")){
+            System.out.println("You entered play again");
+            return true;
+        }
+        else {
+            System.out.println("Game exiting.");
+            return false;
+        }
+    }
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
         ArrayList<Asteroid> asteroids = new ArrayList<>();
         for(int i = 0; i < numOfRocks; i++){
