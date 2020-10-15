@@ -6,8 +6,6 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
-import java.awt.desktop.OpenURIEvent;
-import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -19,7 +17,7 @@ import java.util.Random;
 public class Game {
 
 // Member Variables
-    Player player1;
+    static Player player1;
     Planet earth;
     Planet moon;
     Planet venus;
@@ -126,7 +124,7 @@ public class Game {
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
 //        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
-        hud.think(initialThoughts);
+        hud.prompt1(initialThoughts);
         while(player1.getHealth() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
@@ -134,17 +132,16 @@ public class Game {
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
             parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
+            // else, loop breaks, ask the player if they'd like to start over
+            if(player1.getHealth() <= 0) {
+                // player died, start over?
+                System.out.println("player died.");
+            }
+            else if (starship.getHealth() <= 0) {
+                // starship exploded, start over?
+                System.out.println("Starship exploded.");
+            }
         }
-        // else, loop breaks, ask the player if they'd like to start over
-        if(player1.getHealth() <= 0) {
-            // player died, start over?
-            System.out.println("player died.");
-        }
-        else if (starship.getHealth() <= 0) {
-            // starship exploded, start over?
-            System.out.println("Starship exploded.");
-        }
-
     }
 
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
