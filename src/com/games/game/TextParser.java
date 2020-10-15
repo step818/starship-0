@@ -7,6 +7,7 @@ import java.util.*;
 
 public class TextParser {
     private boolean usedShield;
+    private static boolean inAsteroidBattle = false;
 
     // create a list of familiar key verbs
     private Collection<String> verbs = new ArrayList<>(Arrays.asList("go", "use", "take"));
@@ -18,27 +19,31 @@ public class TextParser {
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
     public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level, HashMap<String, HashMap<String, String>> space) {
         try {
-            String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
-            String verbCommand = inputSplit[0];
-            // parse for the verb the user has chosen
-            switch(verbCommand) {
-                case "go":
-                    scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space,hud, player);
-                    break;
-                case "use" :
+            if(inAsteroidBattle) {
+                // check if dodge input matches with asteroid.getlocation()
+                asteroidCollision(input, asteroids, hud, starship);
+            } else {
+                String[] inputSplit = input.split(" ", 2); // "go up" -> ['go', 'up']
+                String verbCommand = inputSplit[0];
+                // parse for the verb the user has chosen
+                switch(verbCommand) {
+                    case "go":
+                        scanGoNouns(inputSplit[1], planets, asteroids, aliens, starship, space,hud, player);
+                        break;
+                    case "use" :
                     case "take":
-                    takeUseDelegator(inputSplit[1], verbCommand, player, starship, hud);
-                    break;
-                case "show":
-                    showStatus(hud, starship);
-                    break;
-                default:
-                    hud.think("What exactly are you saying?");
+                        takeUseDelegator(inputSplit[1], verbCommand, player, starship, hud);
+                        break;
+                    case "show":
+                        showStatus(hud, starship);
+                        break;
+                    default:
+                        hud.prompt1("What exactly are you saying?");
+                }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            hud.think("ArrayOutOfBoundsException: ");
-            hud.think(e.getMessage());
-            hud.think("Try again");
+            hud.prompt1("ArrayOutOfBoundsException: ");
+            hud.prompt2(e.getMessage() + ". Try again.");
         }
     }
 
@@ -57,88 +62,112 @@ public class TextParser {
                 if(planet.getName().equals(neighbors.get(noun))){
                     starship.burnFuel();
                     starship.setCurrentLocation(planet);
-                    hud.think("You have arrived at " + starship.getCurrentLocation().getName());
+                    hud.prompt1("You have arrived at " + starship.getCurrentLocation().getName());
                     break;
                 }
             }
             // if asteroids, make asteroid list, tell pleyer to WATCH OUT!, and allow player to try to dodge out of harms way
             // if player hits asteroid, deduct health. set current location to asteroids
             if(neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Asteroids")){
-                hud.think("Boom! Its an asteroid field!");
-                starship.setCurrentAsteroids(neighbors.get(noun));
-                potentialAsteroidCollision(asteroids, player, hud, starship);
+                // pass a boolean to let hal know that you are in an asteroid battle
+                setInAsteroidBattle(true);
+                hud.prompt1("Boom! Its an asteroid field! Dodge left right up or down.");
 
             } else if (neighbors.get(noun).substring(0, neighbors.get(noun).length()-1).equals("Aliens")) {
-                hud.think("Boom! Its an alien ambush!");
+//                hud.think("Boom! Its an alien ambush!");
                 starship.setInSpace(true);
                 alienFighting(aliens, player, hud, starship);
             }
         }
         else {
-            hud.think("You can\'t go that way.");
+            hud.prompt1("You can\'t go that way.");
         }
     }
 
-    public void potentialAsteroidCollision(ArrayList<Asteroid> asteroids, Player player, HUD hud, Starship starship){
-        for(Asteroid asteroid : asteroids) {
-            boolean dodged = Output.dodgeAsteroid(asteroid);
-            // take damage or not based on a boolean if they dodged correctly
-            if(dodged) {
-                hud.think("Dodged asteroid! Good job");
+    public void asteroidCollision(String input, ArrayList<Asteroid> asteroids, HUD hud, Starship starship) {
+        String location = asteroids.get(0).getPosition();
+        // check if user's input
+        if (input.equals(location)) {
+            hud.prompt1("Phwew dodged it");
+            asteroids.remove(0);
+        } else {
+            if(usedShield) {
+                starship.takeHalfDamage();
             } else {
-                if(player.playerHasShield()){
-                    hud.think("Looks like you have a shield. Type \'y\' to use shield and take on less damage.");
-                    Scanner input = new Scanner(System.in);
-                    String response = input.nextLine().toLowerCase();
-                    if(response.equals("y")){
-                        use("shield", player, hud, starship);
-                        if(usedShield){
-                            starship.takeHalfDamage();
-                            hud.think("Half damage taken");
-                        }
-                    }
-                    else {
-                        starship.takenDamage();
-                        hud.think("!!!@!%! Ouch!* Starship hit.");
-                    }
-                }
-                else{
-                    starship.takenDamage();
-                    hud.think("!!!@!%! Ouch!* Starship hit.");
-                }
+                starship.takenDamage();
             }
+            asteroids.remove(0);
+            hud.prompt1("Ouch! Starship hit! Health decreased!");
+        }
+        if (asteroids.size() <= 0) {
+            inAsteroidBattle = false;
+            hud.prompt2("You made it passed the asteroids.");
+        } else {
+            hud.prompt2("There\'s another asteroid, which way do you want to steer?");
         }
     }
+
+//    public void potentialAsteroidCollision(ArrayList<Asteroid> asteroids, Player player, HUD hud, Starship starship){
+//        for(Asteroid asteroid : asteroids) {
+//            boolean dodged = hud.getOutput().dodgeAsteroid(asteroid);
+////             take damage or not based on a boolean if they dodged correctly
+//            if(dodged) {
+//                hud.prompt1("Dodged asteroid! Good job");
+//            } else {
+//                if(player.playerHasShield()){
+//                    hud.prompt1("Looks like you have a shield. Type \'y\' to use shield and take on less damage.");
+//                    Scanner input = new Scanner(System.in);
+//                    String response = input.nextLine().toLowerCase();
+//                    if(response.equals("y")){
+//                        use("shield", player, hud, starship);
+//                        if(usedShield){
+//                            starship.takeHalfDamage();
+//                            hud.prompt1("Half damage taken");
+//                        }
+//                    }
+//                    else {
+//                        starship.takenDamage();
+//                        hud.prompt1("!!!@!%! Ouch!* Starship hit.");
+//                    }
+//                }
+//                else{
+//                    starship.takenDamage();
+//                    hud.prompt1("!!!@!%! Ouch!* Starship hit.");
+//                }
+//            }
+//        }
+//    }
     public void alienFighting(ArrayList<Alien> aliens, Player player, HUD hud, Starship starship){
         for(Alien alien : aliens) {
             int count = 1;
             while(alien.getHealth() > 0) {
-                hud.think("Alien ship health: " + alien.getHealth());
+                hud.prompt1("Alien ship health: " + alien.getHealth());
                 boolean shot = Output.shotAlien(alien);
                 if (shot && player.playerHasWeapon()) {
                     alien.setHealth(alien.getHealth() - 50);
-                    hud.think("Direct hit! You hit the target!");
+                    hud.prompt1("Direct hit! You hit the target!");
                     // while (alien.getHealth > 0) stay with it and kill him. change aliens position
                     // until it dies, see if you can remove it from the list once dead
                 }
                 else if(shot && !player.playerHasWeapon()){
-                    hud.think("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
+                    hud.prompt1("Should've grabbed that weapon! Alien ship fires right at you! Starship health: \'-20\'");
                     // player health should go down
+                    // pass argument int to takeDAmage
                     starship.takenDamage();
                 }
                 else {
-                    hud.think("Missed! Alien ship fired! Starship health: \'-20\'");
+                    hud.prompt1("Missed! Alien ship fired! Starship health: \'-20\'");
                     starship.takenDamage();
                 }
                 count++;
             }
-            hud.think("You killed an alien ship! Success!");
+            hud.prompt1("You killed an alien ship! Success!");
         }
     }
     public void takeUseDelegator(String noun, String verb, Player player, Starship starship, HUD hud) {
 // if the argument is valid useNoun, " "
         if (verb.equals("use")) {
-            hud.think("you want to use " + noun + " ?");
+            hud.prompt1("you want to use " + noun + " ?");
             whichItemToCallUseWith(noun, player, hud, starship);
         }
         else if (verb.equals("take")){
@@ -155,6 +184,7 @@ public class TextParser {
             }
         }
     }
+
     public void use(String noun, Player player, HUD hud, Starship starship){
         switch(noun){
             case "shield":
@@ -165,15 +195,24 @@ public class TextParser {
                 // remove fuel from player's inventory
                 break;
             case "Elon Musk":
-                hud.think("Elon says he doesn't like feeling used.");
+                hud.prompt1("Elon says he doesn't like feeling used.");
                 break;
             default:
                 usedShield = false;
-                hud.think("Looks like you don't have one of those.");
+                hud.prompt1("Looks like you don't have one of those.");
         }
     }
     public void take(String noun, Player player, HUD hud){
-        hud.think("You want to take " +noun);
+        hud.prompt1("You want to take " +noun);
         player.setInventory(noun);
+    }
+
+    // getters and setters
+    public static boolean isInAsteroidBattle() {
+        return inAsteroidBattle;
+    }
+
+    public static void setInAsteroidBattle(boolean inAsteroidBattle) {
+        TextParser.inAsteroidBattle = inAsteroidBattle;
     }
 }

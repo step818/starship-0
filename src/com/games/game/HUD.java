@@ -4,10 +4,6 @@ import com.games.pieces.Planet;
 import com.games.pieces.Player;
 import com.games.pieces.Starship;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class HUD {
     private Starship starship;
     private Player player;
@@ -29,16 +25,20 @@ public class HUD {
         System.out.println("||  Current location: " + currentLocation.getName() + "  ||          HAL 9000           ||  Directions: left, right, up, down  ||" );
         System.out.println("||                           ||            ((0))            ++-------------------------------------||");
         System.out.print("||                           ||     ");
-        System.out.print(output.getMessage());
-        System.out.println("  ||      What\'s your next command?     ||");
+        System.out.print(output.getPrompt1());
+        System.out.println("  ||      "+ output.getprompt2() + "     ||");
         System.out.println("||---------------------------++-----------------------------++-------------------------------------++");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
         System.out.println("||  Controls: go, take, use  ||  Resources found:" + currentLocation.getResources() + "                                     ||");
         System.out.println("++---------------------------++--------------------------------------------------------------------++");
     }
 
-    public void think(String thoughts) {
-        output.setMessage(thoughts);
+    public static void prompt1(String prompt1) {
+        Output.setPrompt1(prompt1);
+    }
+
+    public static void prompt2(String prompt2) {
+        Output.setPrompt2(prompt2);
     }
 
     public Starship getStarship() {

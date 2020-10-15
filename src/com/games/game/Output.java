@@ -10,9 +10,11 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Output {
+    // member variables
+    private static String prompt1;
+    private static String prompt2 = "What\'s your next command?";
 
-    public String message;
-
+    // business methods
     public static void pressAnyKeyToContinue(String message) {
         System.out.println(message);
         try {
@@ -76,13 +78,16 @@ public class Output {
         System.out.println(name + " has: " + resources);
     }
 
-    public static boolean dodgeAsteroid(Asteroid asteroid) {
-        String location = asteroid.getPosition();
-        Scanner scan = new Scanner(System.in);
-        printAsteroidObstacle(asteroid);
-        String input = scan.nextLine();
-        return input.equals(location);
-    }
+//    public boolean dodgeAsteroid(Asteroid asteroid) {
+//        boolean result = false;
+//        String location = asteroid.getPosition();
+////        Scanner scan = new Scanner(System.in);
+//        HUD.prompt1("An asteroid has encountered you.. dodge right or left?");
+////        printAsteroidObstacle(asteroid);
+////        String input = scan.nextLine();
+////        return input.equals(location);
+//        return result;
+//    }
 
     public static boolean shotAlien(Alien alien) {
         String location = alien.getPosition();
@@ -93,15 +98,24 @@ public class Output {
         return input.equals(location);
     }
 
-    public String getMessage() {
-        return message;
+    // getters and setters
+    public String getPrompt1() {
+        return prompt1;
     }
 
-    public void setMessage(String message) {
-        if (message.length() < 1) {
-            this.message = "What\'s your next command?";
+    public static void setPrompt1(String prompt1) {
+        Output.prompt1 = prompt1;
+    }
+
+    public static String getprompt2() {
+        return prompt2;
+    }
+
+    public static void setPrompt2(String prompt2) {
+        if (prompt2.length() < 1) {
+            Output.prompt1 = "What\'s your next command?";
         } else {
-            this.message = message;
+            Output.prompt2 = prompt2;
         }
     }
 }
