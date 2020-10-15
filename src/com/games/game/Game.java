@@ -6,6 +6,8 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
+import java.awt.desktop.OpenURIEvent;
+import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -17,7 +19,7 @@ import java.util.Random;
 public class Game {
 
 // Member Variables
-    static Player player1;
+    Player player1;
     Planet earth;
     Planet moon;
     Planet venus;
@@ -117,33 +119,60 @@ public class Game {
         parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
+        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
+
         play(player1, planets, asteroids, aliens, starship, hud, level1);
-        run();
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
-//        output.introNarrative(player);
+        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
-        while(player1.getHealth() > 0 && starship.getHealth() > 0){
+        //run();
+        while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
             System.out.print("|| Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
             parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
-            // else, loop breaks, ask the player if they'd like to start over
-            if(player1.getHealth() <= 0) {
-                // player died, start over?
-                System.out.println("player died.");
+        }
+         // else, loop breaks, ask the player if they'd like to start over
+        if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
+            if(starship.getCurrentLocation() == mars){
+                System.out.println("You made it to Mars! Congratulations.");
             }
-            else if (starship.getHealth() <= 0) {
-                // starship exploded, start over?
-                System.out.println("Starship exploded.");
+            else{
+                System.out.println("Game over. Enter \'y\' to play again or \'n\' to exit.");
             }
+            restartOrClose();
         }
     }
 
+    public void restartOrClose() throws InterruptedException{
+        if(startOverPrompt()){
+            this.begin(80, 24);
+        }
+        else{
+            System.exit(0);
+        }
+    }
+    public boolean startOverPrompt(){
+        Scanner input = new Scanner(System.in);
+        String command = input.nextLine().toLowerCase();
+        while(!command.equals("y") && !command.equals("n")){
+            System.out.println("Invalid choice. Enter y or n. \n Do you want to try again?");
+            command = input.nextLine().toLowerCase();
+        }
+        if(command.equals("y")){
+            System.out.println("You entered play again");
+            return true;
+        }
+        else {
+            System.out.println("Game exiting.");
+            return false;
+        }
+    }
     public ArrayList<Asteroid> createAsteroids(int numOfRocks, String size){
         ArrayList<Asteroid> asteroids = new ArrayList<>();
         for(int i = 0; i < numOfRocks; i++){
@@ -213,9 +242,9 @@ public class Game {
         }
     }
     public void render(){
-        //gameScreen.pointCameraAt(world, player.getX(), player.getY());
+        // gameScreen.pointCameraAt(world, player.getX(), player.getY());
         gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
-        //gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
+        // gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
         gameScreen.refresh();
     }
 

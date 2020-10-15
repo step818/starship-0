@@ -99,9 +99,9 @@ public class TextParser {
             asteroids.remove(0);
         } else {
             if(usedShield) {
-                starship.takeHalfDamage();
+                starship.takenDamage(5);
             } else {
-                starship.takenDamage();
+                starship.takenDamage(10);
             }
             asteroids.remove(0);
             hud.prompt1("Ouch! Starship hit! Health decreased!");
@@ -125,9 +125,9 @@ public class TextParser {
             }
         } else {
             if(usedShield) {
-                starship.takeHalfDamage();
+                starship.takenDamage(10);
             } else {
-                starship.takenDamage();
+                starship.takenDamage(20);
             }
             hud.prompt1("Starship hit! Health decreased!");
         }
@@ -159,7 +159,6 @@ public class TextParser {
             }
         }
     }
-
     public void use(String noun, Player player, HUD hud, Starship starship){
         switch(noun){
             case "shield":

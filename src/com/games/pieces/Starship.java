@@ -59,11 +59,8 @@ public class Starship {
         Starship.playerCanUseShield = playerCanUseShield;
     }
 
-    public void takenDamage(){
-        setHealth(getHealth() - getDamage());
-    }
-    public void takeHalfDamage(){
-        setHealth(getHealth() - (getDamage()/2));
+    public void takenDamage(int damage){
+        setHealth(getHealth() - damage);
     }
     public void burnFuel(){
         setFuel(getFuel() - fuelUsed);

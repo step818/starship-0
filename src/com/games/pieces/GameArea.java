@@ -62,35 +62,35 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     public void keyPressed(KeyEvent e) {
         inputQueue.add(e);
     }
-/*
-    public void drawDynamicLegend(Rectangle gameViewArea, World world, Map<String, Map<String, String>> tileData, Map<String, Map<String, String>> creatureData) {
-        int x = 5;
-        int y = gameViewArea.height;
-        char glyph;
 
-        for (String tileType : world.getTileTypesInArea(gameViewArea)) {
-            glyph = tileData.get(tileType).get("glyph").charAt(0);
-            terminal.write(glyph + "   " + tileType, x, y);
-            y += 1;
+//    public void drawDynamicLegend(Rectangle gameViewArea, World world, Map<String, Map<String, String>> tileData, Map<String, Map<String, String>> creatureData) {
+//        int x = 5;
+//        int y = gameViewArea.height;
+//        char glyph;
+//
+//        for (String tileType : world.getTileTypesInArea(gameViewArea)) {
+//            glyph = tileData.get(tileType).get("glyph").charAt(0);
+//            terminal.write(glyph + "   " + tileType, x, y);
+//            y += 1;
+//
+//            if (y == gameViewArea.height+2) {
+//                x += 15;
+//                y = gameViewArea.height;
+//            }
+//        }
+//
+//        for (String creatureType : world.getCreatureTypesInArea(gameViewArea)) {
+//            glyph = creatureData.get(creatureType).get("glyph").charAt(0);
+//            terminal.write(glyph + "   " + creatureType, x, y);
+//            y += 1;
+//
+//            if (y == gameViewArea.height+5) {
+//                x += 15;
+//                y = gameViewArea.height;
+//            }
+//        }
+//    }
 
-            if (y == gameViewArea.height+2) {
-                x += 15;
-                y = gameViewArea.height;
-            }
-        }
-
-        for (String creatureType : world.getCreatureTypesInArea(gameViewArea)) {
-            glyph = creatureData.get(creatureType).get("glyph").charAt(0);
-            terminal.write(glyph + "   " + creatureType, x, y);
-            y += 1;
-
-            if (y == gameViewArea.height+5) {
-                x += 15;
-                y = gameViewArea.height;
-            }
-        }
-    }
- */
 
     public InputEvent getNextInput() {
         if(inputQueue.isEmpty() == false)

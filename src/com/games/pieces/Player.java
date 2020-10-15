@@ -9,7 +9,6 @@ import java.util.Scanner;
 import java.lang.reflect.Field;
 
 public class Player {
-    private int health = 100;
     private ArrayList<String> inventory = new ArrayList<>();
     public String name;
     public String itemToGrab;
@@ -55,14 +54,6 @@ public class Player {
 
     public void setPlayerChar(char playerChar) {
         this.playerChar = playerChar;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     public ArrayList<String> getInventory() {
