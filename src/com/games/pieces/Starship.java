@@ -10,9 +10,13 @@ public class Starship {
     public static Planet currentLocation;
     public static String currentAsteroids;
     private static boolean playerCanUseShield = false;
+    private GameArea gameArea;
 
-    public Starship(Planet currentLocation){
+    public Starship(Planet currentLocation, GameArea gameArea){
         setCurrentLocation(currentLocation);
+        this.gameArea = gameArea;
+        this.setHealth(100);
+        this.setFuel(100);
     }
 
     public int getHealth() {
@@ -20,6 +24,7 @@ public class Starship {
     }
 
     public void setHealth(int health) {
+        this.gameArea.changeHUDValue("Starship Health", String.valueOf(this.health), String.valueOf(health));
         this.health = health;
     }
 
@@ -28,6 +33,7 @@ public class Starship {
     }
 
     public void setFuel(int fuel) {
+        this.gameArea.changeHUDValue("Fuel Level", String.valueOf(this.fuel), String.valueOf(fuel));
         this.fuel = fuel;
     }
 

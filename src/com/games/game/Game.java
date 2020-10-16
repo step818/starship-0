@@ -44,6 +44,7 @@ public class Game {
     private static final int mapHeight = 100;
     private int framesPerSecond = 60;
     private int timePerLoop = 1000000000 / framesPerSecond;
+    String strLastMove = "";
 
     //private static final int HEIGHT = 10;
 //   private static final int WIDTH = 10;
@@ -96,7 +97,8 @@ public class Game {
 
 //  Business Methods
     public void begin(int screenWidth, int screenHeight) throws InterruptedException {
-        player1 = new Player('@', Color.yellow, 10, 10);
+        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
+        player1 = new Player('@', Color.yellow, 10, 10, gameScreen);
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
         venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
@@ -113,13 +115,12 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(earth);
+        starship = new Starship(earth, gameScreen);
         hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
-        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
 
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
@@ -223,24 +224,32 @@ public class Game {
     public void processInput() {
         InputEvent event = gameScreen.getNextInput();
         if (event instanceof KeyEvent) {
+            String strMove = "";
             KeyEvent keypress = (KeyEvent)event;
             switch (keypress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
+                    strMove = "Left";
                     player1.move(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
+                    strMove = "Right";
                     player1.move(1, 0); break;
                 case KeyEvent.VK_UP:
+                    strMove = "Up";
                     player1.move(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
+                    strMove = "Down";
                     player1.move(0, 1);
                     break;
             }
+            this.gameScreen.changeHUDValue("Last Move", this.strLastMove, strMove);
+            this.strLastMove = strMove;
         } else if (event instanceof MouseEvent) {
             //
         }
     }
+
     public void render(){
         // gameScreen.pointCameraAt(world, player.getX(), player.getY());
         gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());

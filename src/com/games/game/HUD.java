@@ -4,6 +4,8 @@ import com.games.pieces.Planet;
 import com.games.pieces.Player;
 import com.games.pieces.Starship;
 
+import java.awt.*;
+
 public class HUD {
     private Starship starship;
     private Player player;
@@ -64,4 +66,9 @@ public class HUD {
     public void setOutput(Output output) {
         this.output = output;
     }
-}
+
+
+        
+    }
+
+

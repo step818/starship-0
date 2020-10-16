@@ -13,16 +13,21 @@ public class Player {
     public String name;
     public String itemToGrab;
     public Color playerColor;
+    public GameArea gameArea;
     public int playerPositionX, playerPositionY;
     public char playerChar;
+    private int playerPrevPositionX, playerPrevPositionY;
+    private static int health;
 
 
-    public Player(char playerChar, Color playerColor, int startPositionX, int startPositionY) {
+    public Player(char playerChar, Color playerColor, int startPositionX, int startPositionY, GameArea gameArea) {
         setName();
         setPlayerChar(playerChar);
         setPlayerColor(playerColor);
         setPlayerPositionX(startPositionX);
         setPlayerPositionY(startPositionY);
+        this.gameArea = gameArea;
+        setHealth(100);
     }
     public Color getPlayerColor() {
         return playerColor;
@@ -40,6 +45,10 @@ public class Player {
         this.playerPositionX = playerPositionX;
     }
 
+    public int getPrevX() {return playerPrevPositionX;}
+
+    public int getPrevY() {return playerPrevPositionY;}
+
     public int getPlayerPositionY() {
         return playerPositionY;
     }
@@ -51,6 +60,10 @@ public class Player {
     public char getPlayerChar() {
         return playerChar;
     }
+
+    public int getX() {return playerPositionX;}
+
+    public int getY() {return playerPositionY;}
 
     public void setPlayerChar(char playerChar) {
         this.playerChar = playerChar;
@@ -100,7 +113,18 @@ public class Player {
 
     public void move(int dx, int dy)
     {
+        playerPrevPositionX = playerPositionX;
+        playerPrevPositionY = playerPositionY;
         playerPositionX += dx;
         playerPositionY += dy;
+    }
+
+    public static int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.gameArea.changeHUDValue("Player Health", String.valueOf(this.health), String.valueOf(health));
+        this.health = health;
     }
 }
