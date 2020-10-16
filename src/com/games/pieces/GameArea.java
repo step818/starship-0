@@ -48,13 +48,21 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
                 panel.write('.', x, y, Color.white, Color.black);
             }
         }
-
+        //instantiate asteroids through method call
         drawAsteroids();
-
+        // write out the asteroids on the panel
         for(Asteroid asteroid: asteroids) {
             panel.write('A', asteroid.getX(), asteroid.getY(), Color.lightGray, Color.black);
         }
-
+        // instantiate aliens through method call
+//        drawAliens();
+        for(Asteroid asteroid: asteroids) {
+            if(player1.getPlayerPositionX()==(asteroid.getX()) && player1.getPlayerPositionY()==(asteroid.getY())) {
+                System.out.println("CRASH!");
+                // TODO: in order to lower rocket health, you need to update the Starship class being passed in instead of the Player
+                // then player1.takenDamage(20);
+            }
+        }
         int spx;
         int spy;
 
@@ -67,7 +75,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void drawAsteroids() {
-        for(int i = 4; i < 16; i = i + 4) {
+        for(int i = 4; i < 17; i = i + 4) {
             asteroids.add(new Asteroid("large", i, 6));
         }
     }
