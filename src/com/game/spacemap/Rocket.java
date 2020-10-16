@@ -27,8 +27,8 @@ public class Rocket {
         this.x = x;
         this.y = y;
 
-        width = 25;
-        height = 50;
+        width = 12;
+        height = 25;
         hitBox = new Rectangle(x, y, width, height);
     }
 
@@ -42,6 +42,20 @@ public class Rocket {
 
         if(xspeed > 7) xspeed = 7;
         if(xspeed < -7) xspeed = -7;
+
+        if(keyUp && keyDown || !keyUp && !keyDown) yspeed *= 0.8;
+        else if(keyUp && !keyDown) yspeed --;
+        else if(keyDown && !keyUp) yspeed ++;
+
+        if(yspeed > 0 && yspeed < 0.75) yspeed = 0;
+        if(yspeed < 0 && yspeed > -0.75) yspeed = 0;
+
+        if(yspeed > 7) yspeed = 7;
+        if(yspeed < -7) yspeed = -7;
+
+        // Horizontal Collisions
+
+        // Vertical Collisions
 
         x += xspeed;
         y += yspeed;

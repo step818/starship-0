@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.Graphics;
@@ -14,10 +15,13 @@ import java.awt.Graphics;
 public class GamePanel extends javax.swing.JPanel implements ActionListener {
 
     Rocket player;
+    ArrayList<Wall> walls = new ArrayList<>();
     Timer gameTimer;
 
     public GamePanel() {
         player = new Rocket(400, 300, this);
+
+        makeWalls();
 
         gameTimer = new Timer();
         gameTimer.schedule(new TimerTask() {
@@ -29,12 +33,21 @@ public class GamePanel extends javax.swing.JPanel implements ActionListener {
         }, 0, 17);
     }
 
+    public void makeWalls() {
+        for(int i = 50; i < 650; i += 50) {
+            walls.add(new Wall(i, 600, 50, 50));
+        }
+        walls.add(new Wall(50, 550, 50, 50));
+        walls.add(new Wall(50, 500, 50, 50));
+    }
+
     public void paint(Graphics g) {
         super.paint(g);
 
         Graphics2D gtd = (Graphics2D) g;
 
         player.draw(gtd);
+        for(Wall wall : walls) wall.draw(gtd);
     }
 
 
