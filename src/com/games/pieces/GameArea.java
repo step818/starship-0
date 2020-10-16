@@ -5,23 +5,25 @@ import asciiPanel.AsciiPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 public class GameArea extends JFrame implements KeyListener, MouseListener{
     private Rectangle gameScreenRec;
     private Rectangle mapScreenRec;
-    private AsciiPanel terminal;
+    private AsciiPanel panel;
     //private AsciiCamera camera;
     private Queue<InputEvent> inputQueue;
+
+    private ArrayList<Asteroid> asteroids = new ArrayList<>();
 
     public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
         gameScreenRec = gameAreaRec;
         mapScreenRec = mapAreaRec;
         inputQueue = new LinkedList<>();
-        terminal = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
-        super.add(terminal);
+        panel = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
+        super.add(panel);
         super.addKeyListener(this);
         super.addMouseListener(this);
         super.setSize(this.gameScreenRec.width*9, this.gameScreenRec.height*16);
@@ -30,7 +32,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         super.repaint();
     }
 
-
+    // distance from x and y to begin writing/printing from
     public Point GetCameraOrigin(int xfocus, int yfocus)
     {
         int spx = Math.max(0, Math.min(xfocus - gameScreenRec.width / 2, mapScreenRec.width - gameScreenRec.width));
@@ -39,12 +41,18 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void pointCameraAt(Player player1, int xfocus, int yfocus) {
-
+        // paint the board with '.' to show where the player can move to
         Point origin = GetCameraOrigin(xfocus, yfocus);
         for (int x = 0; x < gameScreenRec.width; x++){
             for (int y = 0; y < gameScreenRec.height; y++){
-                terminal.write('.', x, y, Color.white, Color.black);
+                panel.write('.', x, y, Color.white, Color.black);
             }
+        }
+
+        drawAsteroids();
+
+        for(Asteroid asteroid: asteroids) {
+            panel.write('A', asteroid.getX(), asteroid.getY(), Color.lightGray, Color.black);
         }
 
         int spx;
@@ -54,7 +62,13 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         spy = player1.getPlayerPositionY() - origin.y;
 
         if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height)) {
-            terminal.write(player1.getPlayerChar(), spx, spy, player1.getPlayerColor(), Color.black);
+            panel.write(player1.getPlayerChar(), spx, spy, player1.getPlayerColor(), Color.black);
+        }
+    }
+
+    public void drawAsteroids() {
+        for(int i = 4; i < 16; i = i + 4) {
+            asteroids.add(new Asteroid("large", i, 6));
         }
     }
 
@@ -72,7 +86,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void refresh() {
-        terminal.repaint();
+        panel.repaint();
     }
 
     @Override

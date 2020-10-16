@@ -1,14 +1,8 @@
 package com.game.spacemap;
 
-import javafx.scene.shape.Circle;
-import org.w3c.dom.css.Rect;
-import java.awt.Graphics2D;
-import java.awt.Color;
-
 import java.awt.*;
 
-public class Wall {
-
+public class Obstacle1 {
     int x;
     int y;
     int width;
@@ -17,7 +11,7 @@ public class Wall {
     int startX;
     //overall shape of the wall
     Rectangle hitBox;
-    public Wall(int x, int y, int width, int height){
+    public Obstacle1(int x, int y, int width, int height){
 
         this.x = x;
         startX = x;
@@ -31,12 +25,12 @@ public class Wall {
     public void draw(Graphics2D gtd) {
         gtd.setColor(Color.BLUE);
         gtd.drawRect(x, y, width, height);
-        gtd.setColor(Color.GREEN);
+        gtd.setColor(Color.LIGHT_GRAY);
         gtd.fillRect(x + 1, y + 1, width - 2, height - 2);
     }
 
-    // move the walls and not the rocket
     public int set(int cameraX){
+        // move the walls and not the rocket
         x = startX + cameraX;
         hitBox.x = x;
 

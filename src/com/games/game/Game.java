@@ -6,8 +6,6 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
-import java.awt.desktop.OpenURIEvent;
-import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -38,7 +36,7 @@ public class Game {
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
 
     private Rectangle gameScreenRec;
-    private GameArea gameScreen;
+    private GameArea gameArea;
     private boolean isRunning;
     private static final int mapWidth = 100;
     private static final int mapHeight = 100;
@@ -96,7 +94,7 @@ public class Game {
 
 //  Business Methods
     public void begin(int screenWidth, int screenHeight) throws InterruptedException {
-        player1 = new Player('@', Color.yellow, 10, 10);
+        player1 = new Player('@', Color.red, 5, 15);
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
         venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
@@ -119,16 +117,16 @@ public class Game {
         parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
-        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
+        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
 
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
-        output.introNarrative(player);
+//        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
-//        run();
+        run();
         while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
@@ -219,17 +217,19 @@ public class Game {
         }
         return aliens;
     }
-
+    // handle user input, such as KeyEvents
     public void processInput() {
-        InputEvent event = gameScreen.getNextInput();
+        InputEvent event = gameArea.getNextInput();
         if (event instanceof KeyEvent) {
             KeyEvent keypress = (KeyEvent)event;
+            // check if user is pressing the arrow keys
             switch (keypress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
                     player1.move(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    player1.move(1, 0); break;
+                    player1.move(1, 0);
+                    break;
                 case KeyEvent.VK_UP:
                     player1.move(0, -1);
                     break;
@@ -238,16 +238,14 @@ public class Game {
                     break;
             }
         } else if (event instanceof MouseEvent) {
-            //
+            // possibly do things if the user clicks the mouse
         }
     }
     public void render(){
-        // gameScreen.pointCameraAt(world, player.getX(), player.getY());
-        gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
-        // gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
-        gameScreen.refresh();
+        gameArea.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
+        gameArea.refresh();
     }
-
+    // load the JFrame window
     public void run() {
         isRunning = true;
 
@@ -260,7 +258,6 @@ public class Game {
             long endTime = System.nanoTime();
 
             long sleepTime = timePerLoop - (endTime-startTime);
-
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime/1000000);

@@ -27,8 +27,8 @@ public class Rocket {
         this.x = x;
         this.y = y;
 
-        width = 12;
-        height = 25;
+        width = 25;
+        height = 12;
         hitBox = new Rectangle(x, y, width, height);
     }
 
@@ -54,18 +54,42 @@ public class Rocket {
         if(yspeed < -7) yspeed = -7;
 
         // Horizontal Collisions
-
+        hitBox.x += xspeed;
+        for(Wall wall: panel.walls) {
+            if(hitBox.intersects(wall.hitBox)){
+                hitBox.x -= xspeed;
+                while(!wall.hitBox.intersects(hitBox)) hitBox.x += Math.signum(xspeed);
+                hitBox.x -= Math.signum(xspeed);
+                panel.cameraX += x - hitBox.x;
+                xspeed = 0;
+                hitBox.x = x;
+            }
+        }
         // Vertical Collisions
-
-        x += xspeed;
+        hitBox.y += yspeed;
+        for(Wall wall: panel.walls) {
+            if(hitBox.intersects(wall.hitBox)){
+                hitBox.y -= yspeed;
+                while(!wall.hitBox.intersects(hitBox)) hitBox.y += Math.signum(yspeed);
+                hitBox.y -= Math.signum(yspeed);
+                yspeed = 0;
+                y = hitBox.y;
+            }
+        }
+        // The camera stays fixed on the rocket, while the background moves
+        panel.cameraX -= xspeed;
         y += yspeed;
 
         hitBox.x = x;
         hitBox.y = y;
+
+        // Die if you fly off the screen
+        if(y > 640 || y < 0) panel.reset();
     }
 
     public void draw(Graphics2D gTwoD) {
-        gTwoD.setColor(Color.black);
+        gTwoD.setColor(Color.red);
         gTwoD.fillRect(x, y, width, height);
+
     }
 }
