@@ -6,6 +6,8 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
+import java.awt.desktop.OpenURIEvent;
+import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -147,9 +149,20 @@ public class Game {
         }
     }
 
+    public void restart() throws InterruptedException{
+        player1.clearInventory();
+        starship.setHealth(starship.getHealth() + (100 - starship.getHealth()));
+        starship.setFuel(starship.getFuel() + (100 - starship.getFuel()));
+        starship.setCurrentLocation(earth);
+        parser = new TextParser();
+        output = new Output();
+        hud = new HUD(starship, player1, output);
+        play(player1, planets, asteroids, aliens, starship, hud, level1);
+    }
+
     public void restartOrClose() throws InterruptedException{
         if(startOverPrompt()){
-            this.begin(80, 24);
+            this.restart();
         }
         else{
             System.exit(0);
@@ -258,6 +271,7 @@ public class Game {
             long endTime = System.nanoTime();
 
             long sleepTime = timePerLoop - (endTime-startTime);
+
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime/1000000);
