@@ -1,5 +1,6 @@
 package com.games.game;
 
+import com.games.client.Main;
 import com.games.pieces.*;
 //import com.games.pieces.Planet;
 //import com.games.pieces.Player;
@@ -11,157 +12,43 @@ import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+
+
 import java.util.*;
 import java.util.Random;
 
 public class Game {
 
-    // Member Variables
-    private static Player player;
-    private static ArrayList<Planet> planets;
-    private static ArrayList<Asteroid> asteroids;
-    private static ArrayList<Alien> aliens;
-    private static Starship starship;
-    private static HUD hud;
-    private static Output output;
-    private static Level level1;
-    private static TextParser parser;
-    private static HashMap<String, HashMap<String, String>> space;
-    private static Rectangle gameScreenRec;
-    private static GameArea gameScreen;
-    private static boolean isRunning;
+// Member Variables
+    Player player1;
+    Planet earth;
+    Planet moon;
+    Planet venus;
+    Planet mercury;
+    Planet mars;
+    Planet obstacle1;
+    Planet obstacle2;
+    ArrayList<Planet> planets = new ArrayList<>();
+    ArrayList<Asteroid> asteroids;
+    ArrayList<Alien> aliens;
+    Starship starship;
+    HUD hud;
+    Output output = new Output();
+    Level level1;
+    TextParser parser;
+    public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
+
+    private Rectangle gameScreenRec;
+    private GameArea gameScreen;
+    private boolean isRunning;
     private static final int mapWidth = 100;
     private static final int mapHeight = 100;
-    private static int framesPerSecond = 60;
-    private static int timePerLoop = 1000000000 / framesPerSecond;
+    private int framesPerSecond = 60;
+    private int timePerLoop = 1000000000 / framesPerSecond;
 
-    static Game game = new Game();
+    //private static final int HEIGHT = 10;
+//   private static final int WIDTH = 10;
 
-    private Game(){
-
-    }
-
-    public static Game getGameInstance(){
-        return game;
-    }
-
-    public static Player getPlayer() {
-        return player;
-    }
-    public static void setPlayer() {
-        player = new Player('@', Color.yellow, 10, 10);
-    }
-
-    public static ArrayList<Planet> getPlanets() {
-        return planets;
-    }
-    public static void setPlanets() {
-        planets = new ArrayList<>();
-        planets.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food"))));
-        planets.add(new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon"))));
-        planets.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal"))));
-        planets.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield"))));
-        planets.add(new Planet("Mars", new ArrayList<>()));
-        planets.add(new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster"))));
-        planets.add(new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun"))));
-    }
-
-    public static ArrayList<Asteroid> getAsteroids() {
-        return asteroids;
-    }
-    public static void setAsteroids() {
-        asteroids = game.createAsteroids(3, "large");
-    }
-
-    public static ArrayList<Alien> getAliens() {
-        return aliens;
-    }
-    public static void setAliens() {
-        aliens = game.createAliens(3);
-    }
-
-    public static Starship getStarship() {
-        return starship;
-    }
-    public static void setStarship() {
-        starship = new Starship(planets.get(0));
-    }
-
-    public static HUD getHud() {
-        return hud;
-    }
-    public static void setHud() {
-        hud = new HUD(starship, player, output);
-    }
-
-    public static Output getOutput() {
-        return output;
-    }
-    public static void setOutput() {
-        output = new Output();
-    }
-
-    public static Level getLevel1() {
-        return level1;
-    }
-    public static void setLevel1() {
-        level1 = new Level();
-    }
-
-    public static TextParser getParser() {
-        return parser;
-    }
-    public static void setParser() {
-        parser = new TextParser();
-    }
-
-    public static HashMap<String, HashMap<String, String>> getSpace() {
-        return space;
-    }
-    public static void setSpace() {
-        space = new HashMap<String, HashMap<String, String>>();
-        space = game.drawGame();
-    }
-
-    //  Business Methods
-    public void begin(int screenWidth, int screenHeight) throws InterruptedException {
-        setPlayer();
-        setPlanets();
-        setAsteroids();
-        setAliens();
-        setStarship();
-        setHud();
-        setOutput();
-        setParser();
-        setSpace();
-        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
-        play();
-    }
-
-    public void play() throws InterruptedException {
-        getOutput().introNarrative(getPlayer());
-        String initialThoughts = "Welcome to Starship.";
-        getHud().prompt1(initialThoughts);
-        //run();
-        while(getStarship().getFuel() > 0 && getStarship().getHealth() > 0 && getStarship().getCurrentLocation() != getPlanets().get(4)){
-            getHud().display(getStarship().getCurrentLocation());
-            // keep accepting commands from player and playing
-            System.out.print("|| Input: ");
-            Scanner input = new Scanner(System.in);
-            String command = input.nextLine();
-            getParser().gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level1, space);
-        }
-         // else, loop breaks, ask the player if they'd like to start over
-        if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
-            if(starship.getCurrentLocation() == getPlanets().get(4)){
-                System.out.println("You made it to Mars! Congratulations.");
-            }
-            else{
-                System.out.println("Game over. Enter \'y\' to play again or \'n\' to exit.");
-            }
-            restartOrClose();
-        }
-    }
 
     public HashMap<String, HashMap<String, String>> drawGame() {
 // Earths neighbors
@@ -208,9 +95,75 @@ public class Game {
         return space;
     }
 
+//  Business Methods
+    public void begin(int screenWidth, int screenHeight) throws InterruptedException {
+        player1 = new Player('@', Color.yellow, 10, 10);
+        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
+        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
+        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
+        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
+        mars = new Planet("Mars", new ArrayList<>());
+        planets.add(earth);
+        planets.add(moon);
+        planets.add(venus);
+        planets.add(mercury);
+        planets.add(mars);
+        planets.add(obstacle1);
+        planets.add(obstacle2);
+        asteroids = createAsteroids(3, "large");
+        aliens = createAliens(3);
+        starship = new Starship(earth);
+        hud = new HUD(starship, player1, output);
+        level1 = new Level();
+        parser = new TextParser();
+        space = drawGame();
+        System.out.println(player1.getName());
+        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
+
+        play(player1, planets, asteroids, aliens, starship, hud, level1);
+    }
+
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
+        output.introNarrative(player);
+        String initialThoughts = "Welcome to Starship.";
+        hud.prompt1(initialThoughts);
+        //run();
+        while(starship.getFuel() > 0 && starship.getHealth() > 0 && starship.getCurrentLocation() != mars){
+            this.hud.display(starship.getCurrentLocation());
+            // keep accepting commands from player and playing
+            System.out.print("|| Input: ");
+            Scanner input = new Scanner(System.in);
+            String command = input.nextLine();
+            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
+        }
+         // else, loop breaks, ask the player if they'd like to start over
+        if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
+            if(starship.getCurrentLocation() == mars){
+                System.out.println("You made it to Mars! Congratulations.");
+            }
+            else{
+                System.out.println("Game over. Enter \'y\' to play again or \'n\' to exit.");
+            }
+            restartOrClose();
+        }
+    }
+
+    public void restart() throws InterruptedException{
+        player1.clearInventory();
+        starship.setHealth(starship.getHealth() + (100 - starship.getHealth()));
+        starship.setFuel(starship.getFuel() + (100 - starship.getFuel()));
+        starship.setCurrentLocation(earth);
+        parser = new TextParser();
+        output = new Output();
+        hud = new HUD(starship, player1, output);
+        play(player1, planets, asteroids, aliens, starship, hud, level1);
+    }
+
     public void restartOrClose() throws InterruptedException{
         if(startOverPrompt()){
-            this.begin(80, 24);
+            this.restart();
         }
         else{
             System.exit(0);
@@ -256,6 +209,7 @@ public class Game {
         }
         return asteroids;
     }
+
     public ArrayList<Alien> createAliens(int numOfAliens){
         ArrayList<Alien> aliens = new ArrayList<>();
         for(int i = 0; i < numOfAliens; i++){
@@ -278,23 +232,21 @@ public class Game {
         return aliens;
     }
 
-
-    // game ascii board methods
     public void processInput() {
         InputEvent event = gameScreen.getNextInput();
         if (event instanceof KeyEvent) {
             KeyEvent keypress = (KeyEvent)event;
             switch (keypress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
-                    getPlayer().move(-1, 0);
+                    player1.move(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    getPlayer().move(1, 0); break;
+                    player1.move(1, 0); break;
                 case KeyEvent.VK_UP:
-                    getPlayer().move(0, -1);
+                    player1.move(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
-                    getPlayer().move(0, 1);
+                    player1.move(0, 1);
                     break;
             }
         } else if (event instanceof MouseEvent) {
@@ -303,10 +255,11 @@ public class Game {
     }
     public void render(){
         // gameScreen.pointCameraAt(world, player.getX(), player.getY());
-        gameScreen.pointCameraAt(getPlayer(), getPlayer().getPlayerPositionX(), getPlayer().getPlayerPositionY());
+        gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
         // gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
         gameScreen.refresh();
     }
+
     public void run() {
         isRunning = true;
 

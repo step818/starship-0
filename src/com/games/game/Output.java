@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Output {
     // member variables
-    private static String prompt1;
+    private static String prompt1 = "";
     private static String prompt2 = "What\'s your next command?";
 
     // business methods
