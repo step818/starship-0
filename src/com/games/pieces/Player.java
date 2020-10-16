@@ -77,6 +77,10 @@ public class Player {
         this.inventory.add(item);
     }
 
+    public void clearInventory(){
+        inventory.clear();
+    }
+
     public String getName() {
         return name;
     }

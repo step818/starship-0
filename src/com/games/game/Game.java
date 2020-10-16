@@ -1,5 +1,6 @@
 package com.games.game;
 
+import com.games.client.Main;
 import com.games.pieces.*;
 //import com.games.pieces.Planet;
 //import com.games.pieces.Player;
@@ -130,7 +131,7 @@ public class Game {
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
         //run();
-        while(starship.getFuel() > 0 && starship.getHealth() > 0){
+        while(starship.getFuel() > 0 && starship.getHealth() > 0 && starship.getCurrentLocation() != mars){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
             System.out.print("|| Input: ");
@@ -150,9 +151,20 @@ public class Game {
         }
     }
 
+    public void restart() throws InterruptedException{
+        player1.clearInventory();
+        starship.setHealth(starship.getHealth() + (100 - starship.getHealth()));
+        starship.setFuel(starship.getFuel() + (100 - starship.getFuel()));
+        starship.setCurrentLocation(earth);
+        parser = new TextParser();
+        output = new Output();
+        hud = new HUD(starship, player1, output);
+        play(player1, planets, asteroids, aliens, starship, hud, level1);
+    }
+
     public void restartOrClose() throws InterruptedException{
         if(startOverPrompt()){
-            this.begin(80, 24);
+            this.restart();
         }
         else{
             System.exit(0);
