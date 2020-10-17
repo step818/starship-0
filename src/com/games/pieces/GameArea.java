@@ -31,6 +31,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         super.setResizable(false);
         super.setTitle("Starship");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //instantiate asteroids through method call
+        drawAsteroids();
+        // instantiate aliens through method call
+//        drawAliens();
         super.repaint();
     }
 
@@ -49,17 +53,15 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
                 panel.write('.', x, y, Color.white, Color.black);
             }
         }
-        //instantiate asteroids through method call
-        drawAsteroids();
+
         // write out the asteroids on the panel
         for(Asteroid asteroid: asteroids) {
             panel.write('A', asteroid.getX(), asteroid.getY(), Color.lightGray, Color.black);
         }
+        if(updateMonsters >= 100) {
+            floatAsteroids();
+        }
 
-        floatAsteroids();
-
-        // instantiate aliens through method call
-//        drawAliens();
         for(Asteroid asteroid: asteroids) {
             if(player1.getxPos()==(asteroid.getX()) && player1.getyPos()==(asteroid.getY())) {
                 System.out.println("CRASH!");
@@ -81,22 +83,21 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void drawAsteroids() {
-        for(int i = 4; i < 17; i = i + 4) {
-            asteroids.add(new Asteroid("large", i, 6));
+        int x = 79;
+        for(int i = 4; i < 24; i = i + 4) {
+            asteroids.add(new Asteroid("large", x, i));
+            x -= 4;
         }
     }
 
     public void floatAsteroids() {
-        if(updateMonsters >= 100) {
-            System.out.println(updateMonsters);
             for(Asteroid asteroid: asteroids) {
-                asteroid.setY(asteroid.getY()+1);
-                if(asteroid.getY() == (22)) {
-                    asteroid.setY(0);
+                asteroid.setX(asteroid.getX()-1);
+                if(asteroid.getX() == (0)) {
+                    asteroid.setX(79);
                 }
             }
             updateMonsters = 0;
-        }
     }
 
     @Override

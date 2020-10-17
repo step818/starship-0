@@ -234,9 +234,9 @@ public class Game {
     public void processInput() {
         InputEvent event = gameArea.getNextInput();
         if (event instanceof KeyEvent) {
-            KeyEvent keypress = (KeyEvent)event;
+            KeyEvent keyPress = (KeyEvent)event;
             // check if user is pressing the arrow keys
-            switch (keypress.getKeyCode()){
+            switch (keyPress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
                     starship.move(-1, 0);
                     break;
