@@ -17,7 +17,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private Queue<InputEvent> inputQueue;
 
     private ArrayList<Asteroid> asteroids = new ArrayList<>();
-
+    private int updateMonsters;
     public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
         gameScreenRec = gameAreaRec;
         mapScreenRec = mapAreaRec;
@@ -28,19 +28,20 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         super.addMouseListener(this);
         super.setSize(this.gameScreenRec.width*9, this.gameScreenRec.height*16);
         super.setVisible(true);
+        super.setResizable(false);
+        super.setTitle("Starship");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         super.repaint();
     }
 
     // distance from x and y to begin writing/printing from
-    public Point GetCameraOrigin(int xfocus, int yfocus)
-    {
+    public Point GetCameraOrigin(int xfocus, int yfocus) {
         int spx = Math.max(0, Math.min(xfocus - gameScreenRec.width / 2, mapScreenRec.width - gameScreenRec.width));
         int spy = Math.max(0, Math.min(yfocus - gameScreenRec.height / 2, mapScreenRec.height - gameScreenRec.height));
         return new Point(spx, spy);
     }
 
-    public void pointCameraAt(Player player1, int xfocus, int yfocus) {
+    public void pointCameraAt(Starship player1, int xfocus, int yfocus) {
         // paint the board with '.' to show where the player can move to
         Point origin = GetCameraOrigin(xfocus, yfocus);
         for (int x = 0; x < gameScreenRec.width; x++){
@@ -54,29 +55,47 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         for(Asteroid asteroid: asteroids) {
             panel.write('A', asteroid.getX(), asteroid.getY(), Color.lightGray, Color.black);
         }
+
+        floatAsteroids();
+
         // instantiate aliens through method call
 //        drawAliens();
         for(Asteroid asteroid: asteroids) {
-            if(player1.getPlayerPositionX()==(asteroid.getX()) && player1.getPlayerPositionY()==(asteroid.getY())) {
+            if(player1.getxPos()==(asteroid.getX()) && player1.getyPos()==(asteroid.getY())) {
                 System.out.println("CRASH!");
-                // TODO: in order to lower rocket health, you need to update the Starship class being passed in instead of the Player
+                player1.takenDamage(1);
+                System.out.println(player1.getHealth());
                 // then player1.takenDamage(20);
             }
         }
+        //the distance from the left(x) and top(y) to begin writing from
         int spx;
         int spy;
 
-        spx = player1.getPlayerPositionX() - origin.x;
-        spy = player1.getPlayerPositionY() - origin.y;
+        spx = player1.getxPos() - origin.x;
+        spy = player1.getyPos() - origin.y;
 
         if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height)) {
-            panel.write(player1.getPlayerChar(), spx, spy, player1.getPlayerColor(), Color.black);
+            panel.write('@', spx, spy, Color.red, Color.black);
         }
     }
 
     public void drawAsteroids() {
         for(int i = 4; i < 17; i = i + 4) {
             asteroids.add(new Asteroid("large", i, 6));
+        }
+    }
+
+    public void floatAsteroids() {
+        if(updateMonsters >= 100) {
+            System.out.println(updateMonsters);
+            for(Asteroid asteroid: asteroids) {
+                asteroid.setY(asteroid.getY()+1);
+                if(asteroid.getY() == (22)) {
+                    asteroid.setY(0);
+                }
+            }
+            updateMonsters = 0;
         }
     }
 
@@ -87,13 +106,14 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
 
     public InputEvent getNextInput() {
-        if(inputQueue.isEmpty() == false)
+        if(!inputQueue.isEmpty())
             return inputQueue.poll();
         else
             return null;
     }
 
     public void refresh() {
+        updateMonsters++;
         panel.repaint();
     }
 

@@ -113,7 +113,7 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(earth);
+        starship = new Starship(earth, 5, 15);
         hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
@@ -238,16 +238,16 @@ public class Game {
             // check if user is pressing the arrow keys
             switch (keypress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
-                    player1.move(-1, 0);
+                    starship.move(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    player1.move(1, 0);
+                    starship.move(1, 0);
                     break;
                 case KeyEvent.VK_UP:
-                    player1.move(0, -1);
+                    starship.move(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
-                    player1.move(0, 1);
+                    starship.move(0, 1);
                     break;
             }
         } else if (event instanceof MouseEvent) {
@@ -255,7 +255,7 @@ public class Game {
         }
     }
     public void render(){
-        gameArea.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
+        gameArea.pointCameraAt(starship, starship.getxPos(), starship.getyPos());
         gameArea.refresh();
     }
     // load the JFrame window
