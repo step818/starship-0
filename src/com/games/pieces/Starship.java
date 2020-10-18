@@ -37,6 +37,7 @@ public class Starship {
         setFuel(getFuel() + (100-getFuel()));
     }
 
+
     //Getters and Setters
     public int getxPos() {
         return xPos;

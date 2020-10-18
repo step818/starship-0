@@ -1,26 +1,26 @@
 package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
+import com.games.maps.Moon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
+import java.util.List;
 
 public class GameArea extends JFrame implements KeyListener, MouseListener{
     private Rectangle gameScreenRec;
-    private Rectangle mapScreenRec;
     private AsciiPanel panel;
     //private AsciiCamera camera;
     private Queue<InputEvent> inputQueue;
-
     private ArrayList<Asteroid> asteroids = new ArrayList<>();
+    private ArrayList<Alien> aliens = new ArrayList<>();
+    private List<Weapon> bullets = new ArrayList<>();
+    private ArrayList<Planet> bodies = new ArrayList<>();
     private int updateMonsters;
     public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
         gameScreenRec = gameAreaRec;
-        mapScreenRec = mapAreaRec;
         inputQueue = new LinkedList<>();
         panel = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
         super.add(panel);
@@ -34,49 +34,98 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         //instantiate asteroids through method call
         drawAsteroids();
         // instantiate aliens through method call
-//        drawAliens();
+        drawAliens();
+        drawPlanets();
         super.repaint();
     }
 
     // distance from x and y to begin writing/printing from
     public Point GetCameraOrigin(int xfocus, int yfocus) {
-        int spx = Math.max(0, Math.min(xfocus - gameScreenRec.width / 2, mapScreenRec.width - gameScreenRec.width));
-        int spy = Math.max(0, Math.min(yfocus - gameScreenRec.height / 2, mapScreenRec.height - gameScreenRec.height));
+        int spx = Math.max(0, Math.min(xfocus - gameScreenRec.width / 2, 0));
+        int spy = Math.max(0, Math.min(yfocus - gameScreenRec.height / 2, 0));
         return new Point(spx, spy);
     }
 
     public void pointCameraAt(Starship player1, int xfocus, int yfocus) {
+
         // paint the board with '.' to show where the player can move to
-        Point origin = GetCameraOrigin(xfocus, yfocus);
         for (int x = 0; x < gameScreenRec.width; x++){
             for (int y = 0; y < gameScreenRec.height; y++){
                 panel.write('.', x, y, Color.white, Color.black);
             }
         }
 
-        // write out the asteroids on the panel
+        // draw the asteroids on the panel
         for(Asteroid asteroid: asteroids) {
             panel.write('A', asteroid.getX(), asteroid.getY(), Color.lightGray, Color.black);
         }
-        if(updateMonsters >= 100) {
+
+        //move asteroids every 25 refresh()es
+        int asteroidSpd = 25;
+        if(updateMonsters >= asteroidSpd) {
             floatAsteroids();
         }
 
+        // check for asteroid collision
         for(Asteroid asteroid: asteroids) {
             if(player1.getxPos()==(asteroid.getX()) && player1.getyPos()==(asteroid.getY())) {
                 System.out.println("CRASH!");
                 player1.takenDamage(1);
-                System.out.println(player1.getHealth());
-                // then player1.takenDamage(20);
+                System.out.println("Health: " + player1.getHealth());
             }
         }
+
+        // draw the aliens on the panel
+        for(Alien alien: aliens) {
+            panel.write('X', alien.getX(), alien.getY(), Color.green, Color.black);
+        }
+
+        // move each alien every 20 refresh() calls
+        int alienSpd = 20;
+        if(updateMonsters >= alienSpd) {
+            floatAliens();
+        }
+
+        //check for alien collision
+        for(Alien alien: aliens) {
+            if(player1.getxPos() == alien.getX() && player1.getyPos() == alien.getY()) {
+                System.out.println("PUEW!");
+                player1.takenDamage(1);
+                System.out.println("Health: " +player1.getHealth());
+            }
+        }
+
+        // draw the bullets array
+        if(bullets.size() > 0) {
+            for(Weapon bullet: bullets) {
+                panel.write('=', bullet.getX(), bullet.getY(), Color.green, Color.black);
+            }
+        }
+
+
+        // move each bullet faster than alienSpd
+        int bulletSpd = 18;
+        if(updateMonsters >= bulletSpd) {
+            floatBullets();
+            removeBullets();
+        }
+
+        // draw planets that were passed in from game class
+        for(Planet planet: bodies) {
+            panel.write(planet.getSymbol(), planet.getX(), planet.getY(), planet.getColor(), Color.black);
+        }
+
+
         //the distance from the left(x) and top(y) to begin writing from
         int spx;
         int spy;
 
+        Point origin = GetCameraOrigin(xfocus, yfocus);
+
         spx = player1.getxPos() - origin.x;
         spy = player1.getyPos() - origin.y;
 
+        // draw the starship
         if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height)) {
             panel.write('@', spx, spy, Color.red, Color.black);
         }
@@ -84,7 +133,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     public void drawAsteroids() {
         int x = 79;
-        for(int i = 4; i < 24; i = i + 4) {
+        for(int i = 23; i > 3; i = i - 4) {
             asteroids.add(new Asteroid("large", x, i));
             x -= 4;
         }
@@ -98,6 +147,52 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
                 }
             }
             updateMonsters = 0;
+    }
+
+    public void drawAliens() {
+        int x = 75;
+        for(int i = 3; i < 24; i = i + 3) {
+            aliens.add(new Alien("large", x, i));
+            x -= 3;
+        }
+    }
+
+    public void floatAliens() {
+        for(Alien alien: aliens) {
+            alien.setX(alien.getX()-1);
+            if(alien.getX() == (0)) {
+                alien.setX(79);
+            }
+        }
+    }
+    // put new Weapon in a list
+    public void drawBullets(int x, int y){
+        bullets.add(new Weapon(x, y));
+    }
+
+    public void floatBullets() {
+        for(Weapon bullet : bullets) {
+            bullet.setX(bullet.getX()+1);
+        }
+    }
+
+    public void removeBullets(){
+        Iterator<Weapon> i = bullets.iterator();
+        while(i.hasNext()) {
+            Weapon bullet = i.next();
+
+            if(bullet.getX() >= (60)) {
+                i.remove();;
+            }
+        }
+    }
+
+    public void drawPlanets() {
+        bodies.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 5, 16, Color.cyan, 'E'));
+        bodies.add(new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm'));
+        bodies.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 30, 20, Color.magenta, 'V'));
+        bodies.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 55, 15, Color.yellow, 'M'));
+        bodies.add(new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M'));
     }
 
     @Override
