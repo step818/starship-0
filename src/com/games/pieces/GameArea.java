@@ -263,12 +263,12 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         alienBullets.removeIf(ablt -> ablt.getX() <= (0));
     }
 
-    public void pickUp(Starship starship){
-        Planet p = starship.getCurrentLocation();
-        String r = p.getResources().get(0);
-        System.out.println("x");
-        if(!starship.inSpace) {
-            System.out.println("You are here: " + p.getName());
+//    public void pickUp(Starship starship){
+//        Planet p = starship.getCurrentLocation();
+//        String r = p.getResources().get(0);
+//        System.out.println("x");
+//        if(!starship.inSpace) {
+//            System.out.println("You are here: " + p.getName());
 //            starship.getInventory().addAll(p.getResources());
 //            System.out.println("You picked up: " + starship.getInventory());
         }
