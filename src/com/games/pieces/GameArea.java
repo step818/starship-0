@@ -1,11 +1,11 @@
 package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
-import com.games.maps.Moon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -17,8 +17,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private ArrayList<Asteroid> asteroids = new ArrayList<>();
     private ArrayList<Alien> aliens = new ArrayList<>();
     private List<Weapon> bullets = new ArrayList<>();
+    private List<Weapon> alienBullets = new ArrayList<>();
     private ArrayList<Planet> bodies = new ArrayList<>();
     private int updateMonsters;
+    private int updateAttacks;
     public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
         gameScreenRec = gameAreaRec;
         inputQueue = new LinkedList<>();
@@ -81,7 +83,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         }
 
         // move each alien every 20 refresh() calls
-        int alienSpd = 20;
+        int alienSpd = 22;
         if(updateMonsters >= alienSpd) {
             floatAliens();
         }
@@ -89,9 +91,17 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         //check for alien collision
         for(Alien alien: aliens) {
             if(player1.getxPos() == alien.getX() && player1.getyPos() == alien.getY()) {
-                System.out.println("PUEW!");
                 player1.takenDamage(1);
                 System.out.println("Health: " +player1.getHealth());
+            }
+        }
+
+        // check for alien bullets collision
+        for(Weapon ablt: alienBullets) {
+            if(player1.getxPos() == ablt.getX() && player1.getyPos() == ablt.getY()) {
+                System.out.println("Starship hit!");
+                player1.takenDamage(1);
+                System.out.println("Health: " + player1.getHealth());
             }
         }
 
@@ -102,12 +112,11 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             }
         }
 
-
         // move each bullet faster than alienSpd
         int bulletSpd = 18;
         if(updateMonsters >= bulletSpd) {
-            floatBullets();
-            removeBullets();
+            floatMyBullets();
+            removeMyBullets();
         }
 
         // draw planets that were passed in from game class
@@ -115,6 +124,34 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             panel.write(planet.getSymbol(), planet.getX(), planet.getY(), planet.getColor(), Color.black);
         }
 
+        // instantiate enemy bullets every time duration
+        int delayEnemyAttack = 50;
+        if(updateAttacks >= delayEnemyAttack) {
+            attack();
+            updateAttacks = 0;
+        }
+
+        // move each alien shot
+        int alienBulletSpd = 18;
+        if(updateMonsters >= alienBulletSpd) {
+            floatTheirBullets();
+            removeTheirBullets();
+        }
+
+        // draw the alienBullets
+        for(Weapon ablt: alienBullets) {
+            panel.write('+', ablt.getX()-1, ablt.getY(), Color.magenta, Color.black);
+        }
+
+        // check to see if the player is directly on a planet
+        for(Planet planet: bodies) {
+            if(player1.getxPos() == planet.getX() && player1.getyPos() == planet.getY()) {
+                player1.setCurrentLocation(planet);
+                player1.setInSpace(false);
+            } else {
+                player1.setInSpace(true);
+            }
+        }
 
         //the distance from the left(x) and top(y) to begin writing from
         int spx;
@@ -133,7 +170,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     public void drawAsteroids() {
         int x = 79;
-        for(int i = 23; i > 3; i = i - 4) {
+        for(int i = 23; i > 0; i = i - 3) {
             asteroids.add(new Asteroid("large", x, i));
             x -= 4;
         }
@@ -152,7 +189,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     public void drawAliens() {
         int x = 75;
         for(int i = 3; i < 24; i = i + 3) {
-            aliens.add(new Alien("large", x, i));
+            aliens.add(new Alien("right", x, i));
             x -= 3;
         }
     }
@@ -160,39 +197,81 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     public void floatAliens() {
         for(Alien alien: aliens) {
             alien.setX(alien.getX()-1);
-            if(alien.getX() == (0)) {
+            if(alien.getX() <= (0)) {
                 alien.setX(79);
             }
         }
     }
+
     // put new Weapon in a list
-    public void drawBullets(int x, int y){
+    public void drawMyBullets(int x, int y){
         bullets.add(new Weapon(x, y));
     }
 
-    public void floatBullets() {
+    public void floatMyBullets() {
         for(Weapon bullet : bullets) {
             bullet.setX(bullet.getX()+1);
         }
     }
 
-    public void removeBullets(){
+    public void removeMyBullets(){
         Iterator<Weapon> i = bullets.iterator();
         while(i.hasNext()) {
             Weapon bullet = i.next();
 
-            if(bullet.getX() >= (60)) {
-                i.remove();;
+            //check for if a monster was shot by bullet
+            monsterShot(bullet);
+
+            // remove bullet once its offscreen
+            if(bullet.getX() >= (79)) {
+                i.remove();
             }
         }
     }
 
+    // place the planets on the board here
     public void drawPlanets() {
-        bodies.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 5, 16, Color.cyan, 'E'));
+        bodies.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.cyan, 'E'));
         bodies.add(new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm'));
-        bodies.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 30, 20, Color.magenta, 'V'));
-        bodies.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 55, 15, Color.yellow, 'M'));
+        bodies.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.pink, 'V'));
+        bodies.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M'));
         bodies.add(new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M'));
+    }
+
+    // remove monster if they were shot by me
+    public void monsterShot(Weapon bullet){
+        aliens.removeIf(alien -> alien.getX() == bullet.getX() && alien.getY() == bullet.getY());
+        asteroids.removeIf(asteroid -> asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY());
+    }
+
+    public void attack() {
+        for(Alien alien: aliens) {
+            alienBullets.add(new Weapon(alien.getX(), alien.getY()));
+        }
+    }
+
+    public void floatTheirBullets(){
+        for(Weapon ablt: alienBullets) {
+            ablt.setX(ablt.getX() - 1);
+        }
+    }
+
+    public void removeTheirBullets(){
+        //check for if starship was shot by alien bullet
+        //            starshipShot(ablt);
+        // remove bullet once its offscreen
+        alienBullets.removeIf(ablt -> ablt.getX() <= (0));
+    }
+
+    public void pickUp(Starship starship){
+        Planet p = starship.getCurrentLocation();
+        String r = p.getResources().get(0);
+        System.out.println("x");
+        if(!starship.inSpace) {
+            System.out.println("You are here: " + p.getName());
+//            starship.getInventory().addAll(p.getResources());
+//            System.out.println("You picked up: " + starship.getInventory());
+        }
     }
 
     @Override
@@ -210,6 +289,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     public void refresh() {
         updateMonsters++;
+        updateAttacks++;
         panel.repaint();
     }
 

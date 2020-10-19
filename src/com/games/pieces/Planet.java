@@ -10,6 +10,12 @@ public class Planet {
     private int x, y;
     private Color color;
     private Character symbol;
+
+    public Planet(String name, ArrayList<String> resources) {
+        setName(name);
+        setResources(resources);
+    }
+
     public Planet(String name, ArrayList<String> resources, int x, int y, Color color, Character symbol) {
         setName(name);
         setResources(resources);

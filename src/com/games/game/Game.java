@@ -6,8 +6,6 @@ import com.games.pieces.*;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
-import java.awt.desktop.OpenURIEvent;
-import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -97,13 +95,13 @@ public class Game {
 //  Business Methods
     public void begin(int screenWidth, int screenHeight) throws InterruptedException {
         player1 = new Player('@', Color.red, 5, 14);
-        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 5, 16, Color.blue, 'E');
-        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 7, 11, Color.LIGHT_GRAY, 'm');
-        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 9, 14, Color.magenta, 'V');
-        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 6, 17, Color.yellow, 'M');
-//        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
-//        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
-        mars = new Planet("Mars", new ArrayList<>(), 15, 12, Color.orange, 'M');
+        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm');
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.magenta, 'V');
+        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M');
+        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
+        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
+        mars = new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M');
         planets.add(earth);
         planets.add(moon);
         planets.add(venus);
@@ -113,7 +111,7 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(earth, 5, 15);
+        starship = new Starship(gameArea, earth, 5, 15);
         hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
@@ -250,7 +248,11 @@ public class Game {
                     starship.move(0, 1);
                     break;
                 case KeyEvent.VK_Z:
-                    gameArea.drawBullets(starship.getxPos(), starship.getyPos());
+                    gameArea.drawMyBullets(starship.getxPos(), starship.getyPos());
+                    break;
+                case KeyEvent.VK_X:
+                    starship.pickUp(gameArea, planets);
+                    break;
             }
         } else if (event instanceof MouseEvent) {
             // possibly do things if the user clicks the mouse

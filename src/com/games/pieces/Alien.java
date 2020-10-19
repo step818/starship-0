@@ -11,6 +11,7 @@ public class Alien {
     }
 
     public Alien(String position, int x, int y) {
+        this(position);
         setX(x);
         setY(y);
     }

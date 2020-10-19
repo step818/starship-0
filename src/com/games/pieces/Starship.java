@@ -1,7 +1,9 @@
 package com.games.pieces;
 
-public class Starship {
+import java.util.ArrayList;
 
+public class Starship {
+    private ArrayList<String> inventory = new ArrayList<>();
     private static int health = 100;
     private static int fuel = 100;
     private static int damage = 20;
@@ -12,7 +14,7 @@ public class Starship {
     private static boolean playerCanUseShield = false;
     public int xPos, yPos;
 
-    public Starship(Planet currentLocation, int xPos, int yPos){
+    public Starship(GameArea gameArea, Planet currentLocation, int xPos, int yPos){
         setCurrentLocation(currentLocation);
         setxPos(xPos);
         setyPos(yPos);
@@ -37,6 +39,17 @@ public class Starship {
         setFuel(getFuel() + (100-getFuel()));
     }
 
+    public void pickUp(GameArea gameArea, ArrayList<Planet> planets) {
+        for(Planet planet : planets) {
+            if(getxPos() == planet.getX() && getyPos() == planet.getY() && planet.getResources().size()>0) {
+                System.out.println("You made it");
+                ArrayList<String> planetsResources = planet.getResources();
+                inventory.add(planetsResources.get(0));
+                planetsResources.remove(0);
+                System.out.println("Inventory: " + inventory);
+            }
+        }
+    }
 
     //Getters and Setters
     public int getxPos() {
@@ -85,6 +98,14 @@ public class Starship {
 
     public void setCurrentLocation(Planet location) {
         this.currentLocation = location;
+    }
+
+    public ArrayList<String> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(ArrayList<String> inventory) {
+        this.inventory = inventory;
     }
 
     public static boolean getPlayerCanUseShield() {
