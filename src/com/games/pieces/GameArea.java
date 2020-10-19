@@ -271,8 +271,8 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 //            System.out.println("You are here: " + p.getName());
 //            starship.getInventory().addAll(p.getResources());
 //            System.out.println("You picked up: " + starship.getInventory());
-        }
-    }
+  //      }
+  //  }
 
     @Override
     public void keyPressed(KeyEvent e) {
