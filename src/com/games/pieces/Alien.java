@@ -3,9 +3,17 @@ package com.games.pieces;
 public class Alien {
     private int health = 100;
     private String position;
+    private int x;
+    private int y;
 
     public Alien(String position) {
         setPosition(position);
+    }
+
+    public Alien(String position, int x, int y) {
+        this(position);
+        setX(x);
+        setY(y);
     }
 
     public int getHealth() {
@@ -24,13 +32,19 @@ public class Alien {
         this.position = position;
     }
 
-    public void changePosition() {
-        // String = pick a random direction
-        // setPosition(position)
+    public int getX() {
+        return x;
     }
 
-    // while alien health is > 0, continue to attack player
-    // takes health from starship and player
-    public void attack(){}
+    public void setX(int x) {
+        this.x = x;
+    }
 
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }

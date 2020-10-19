@@ -18,7 +18,7 @@ public class TextParser {
     private Collection<String> useNouns = new ArrayList<>(Arrays.asList("laser", "shield", "fuel", "weapon", "food", "super laser", "scrap metal", "Elon Musk"));
 
     // this function can do all the scanning for input once the game play begins. i.e. After the start menu and username entry.
-    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level, HashMap<String, HashMap<String, String>> space) {
+    public void gamePlayScanner(String input, Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, HashMap<String, HashMap<String, String>> space) {
         try {
             if(inAsteroidBattle) {
                 // check if dodge input matches

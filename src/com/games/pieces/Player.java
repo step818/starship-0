@@ -102,9 +102,5 @@ public class Player {
         return false;
     }
 
-    public void move(int dx, int dy)
-    {
-        playerPositionX += dx;
-        playerPositionY += dy;
-    }
+
 }

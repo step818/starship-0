@@ -1,14 +1,11 @@
 package com.games.game;
 
-import com.games.client.Main;
 import com.games.pieces.*;
 //import com.games.pieces.Planet;
 //import com.games.pieces.Player;
 //import com.games.pieces.Starship;
 
 import java.awt.*;
-import java.awt.desktop.OpenURIEvent;
-import java.lang.reflect.Array;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,7 +36,7 @@ public class Game {
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
 
     private Rectangle gameScreenRec;
-    private GameArea gameScreen;
+    private GameArea gameArea;
     private boolean isRunning;
     private static final int mapWidth = 100;
     private static final int mapHeight = 100;
@@ -97,14 +94,14 @@ public class Game {
 
 //  Business Methods
     public void begin(int screenWidth, int screenHeight) throws InterruptedException {
-        player1 = new Player('@', Color.yellow, 10, 10);
-        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")));
-        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")));
-        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")));
-        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")));
+        player1 = new Player('@', Color.red, 5, 14);
+        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm');
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.magenta, 'V');
+        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M');
         obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
         obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
-        mars = new Planet("Mars", new ArrayList<>());
+        mars = new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M');
         planets.add(earth);
         planets.add(moon);
         planets.add(venus);
@@ -114,29 +111,29 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(earth);
+        starship = new Starship(gameArea, earth, 5, 15);
         hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
         space = drawGame();
         System.out.println(player1.getName());
-        gameScreen = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight-5));
+        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
 
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 
     public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
-        output.introNarrative(player);
+//        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
-        //run();
-        while(starship.getFuel() > 0 && starship.getHealth() > 0 && starship.getCurrentLocation() != mars){
+        run();
+        while(starship.getFuel() > 0 && starship.getHealth() > 0){
             this.hud.display(starship.getCurrentLocation());
             // keep accepting commands from player and playing
             System.out.print("|| Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
+            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, space);
         }
          // else, loop breaks, ask the player if they'd like to start over
         if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
@@ -231,35 +228,41 @@ public class Game {
         }
         return aliens;
     }
-
+    // handle user input, such as KeyEvents
     public void processInput() {
-        InputEvent event = gameScreen.getNextInput();
+        InputEvent event = gameArea.getNextInput();
         if (event instanceof KeyEvent) {
-            KeyEvent keypress = (KeyEvent)event;
-            switch (keypress.getKeyCode()){
+            KeyEvent keyPress = (KeyEvent)event;
+            // check if user is pressing the arrow keys
+            switch (keyPress.getKeyCode()){
                 case KeyEvent.VK_LEFT:
-                    player1.move(-1, 0);
+                    starship.move(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    player1.move(1, 0); break;
+                    starship.move(1, 0);
+                    break;
                 case KeyEvent.VK_UP:
-                    player1.move(0, -1);
+                    starship.move(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
-                    player1.move(0, 1);
+                    starship.move(0, 1);
+                    break;
+                case KeyEvent.VK_Z:
+                    gameArea.drawMyBullets(starship.getxPos(), starship.getyPos());
+                    break;
+                case KeyEvent.VK_X:
+                    starship.pickUp(gameArea, planets);
                     break;
             }
         } else if (event instanceof MouseEvent) {
-            //
+            // possibly do things if the user clicks the mouse
         }
     }
     public void render(){
-        // gameScreen.pointCameraAt(world, player.getX(), player.getY());
-        gameScreen.pointCameraAt(player1, player1.getPlayerPositionX(), player1.getPlayerPositionY());
-        // gameScreen.drawDynamicLegend(gameViewArea, world, tileData, creatureData);
-        gameScreen.refresh();
+        gameArea.pointCameraAt(starship, starship.getxPos(), starship.getyPos());
+        gameArea.refresh();
     }
-
+    // load the JFrame window
     public void run() {
         isRunning = true;
 
@@ -268,7 +271,6 @@ public class Game {
 
             processInput();
             render();
-
             long endTime = System.nanoTime();
 
             long sleepTime = timePerLoop - (endTime-startTime);
