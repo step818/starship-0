@@ -133,7 +133,7 @@ public class Game {
             System.out.print("|| Input: ");
             Scanner input = new Scanner(System.in);
             String command = input.nextLine();
-            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, level, space);
+            parser.gamePlayScanner(command, player, planets, asteroids, aliens, starship, hud, space);
         }
          // else, loop breaks, ask the player if they'd like to start over
         if(starship.getFuel() <= 0 || starship.getHealth() <= 0) {
@@ -271,7 +271,6 @@ public class Game {
 
             processInput();
             render();
-
             long endTime = System.nanoTime();
 
             long sleepTime = timePerLoop - (endTime-startTime);
