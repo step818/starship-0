@@ -8,5 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="asciiPanel" level="project" />
+    <orderEntry type="library" name="asciiPanel1" level="project" />
   </component>
 </module>

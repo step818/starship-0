@@ -2,38 +2,73 @@ package com.games.pieces;
 
 import com.games.game.Output;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.lang.reflect.Field;
 
 public class Player {
-    private static int health = 100;
-    private static ArrayList<String> inventory;
-    public static String name;
+    private ArrayList<String> inventory = new ArrayList<>();
+    public String name;
     public String itemToGrab;
+    public Color playerColor;
+    public int playerPositionX, playerPositionY;
+    public char playerChar;
 
-    public Player() {
+
+    public Player(char playerChar, Color playerColor, int startPositionX, int startPositionY) {
         setName();
-        setInventory();
+        setPlayerChar(playerChar);
+        setPlayerColor(playerColor);
+        setPlayerPositionX(startPositionX);
+        setPlayerPositionY(startPositionY);
+    }
+    public Color getPlayerColor() {
+        return playerColor;
     }
 
-    public static int getHealth() {
-        return health;
+    public void setPlayerColor(Color playerColor) {
+        this.playerColor = playerColor;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public int getPlayerPositionX() {
+        return playerPositionX;
     }
 
-    public static ArrayList<String> getInventory() {
+    public void setPlayerPositionX(int playerPositionX) {
+        this.playerPositionX = playerPositionX;
+    }
+
+    public int getPlayerPositionY() {
+        return playerPositionY;
+    }
+
+    public void setPlayerPositionY(int playerPositionY) {
+        this.playerPositionY = playerPositionY;
+    }
+
+    public char getPlayerChar() {
+        return playerChar;
+    }
+
+    public void setPlayerChar(char playerChar) {
+        this.playerChar = playerChar;
+    }
+
+    public ArrayList<String> getInventory() {
         return inventory;
     }
 
-    public void setInventory() {
-        this.inventory = new ArrayList<String>(Arrays.asList("cell phone"));
+    public void setInventory(String item) {
+        this.inventory.add(item);
     }
 
-    public static String getName() {
+    public void clearInventory(){
+        inventory.clear();
+    }
+
+    public String getName() {
         return name;
     }
 
@@ -42,7 +77,6 @@ public class Player {
         Scanner input = new Scanner(System.in);
         this.name = input.nextLine();
     }
-
     public String getItemToGrab() {
         return itemToGrab;
     }
@@ -50,4 +84,23 @@ public class Player {
     public void setItemToGrab(String itemToGrab) {
         this.itemToGrab = itemToGrab;
     }
+
+    public boolean playerHasWeapon(){
+        for(String item : getInventory()){
+            if(item.equals("weapon")){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean playerHasShield(){
+        for(String item : getInventory()){
+            if(item.equals("shield")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

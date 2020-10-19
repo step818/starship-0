@@ -1,12 +1,23 @@
 package com.games.pieces;
 
+import java.util.ArrayList;
+
 public class Asteroid {
     public String size;
     public String position;
+    public int x, y;
 
-    public Asteroid(String size, String position){
+    public Asteroid(String size){
         setSize(size);
+    }
+    public Asteroid(String size, String position){
+        this(size);
         setPosition(position);
+    }
+    public Asteroid(String size, int x, int y) {
+        this(size);
+        setX(x);
+        setY(y);
     }
 
     public String getSize() {
@@ -25,16 +36,19 @@ public class Asteroid {
         this.position = position;
     }
 
-    // take health from starship
-    public void collide(){
-        if(size.equals("small")){
-            // take least damage
-        }
-        else if(size.equals("medium")){
-            // take more damage
-        }
-        else{
-            // take most damage
-        }
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
