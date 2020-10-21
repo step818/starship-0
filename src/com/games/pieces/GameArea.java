@@ -1,6 +1,8 @@
 package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
+import com.games.game.HUDGui;
+import com.games.game.OutputGui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,15 +24,25 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private int updateMonsters;
     private int updateAttacks;
     private int hitsIndicator;
-    public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
+
+    private Starship starship;
+    private Player player;
+    private OutputGui output;
+    private HUDGui hud;
+
+    public GameArea(Rectangle gameAreaRec, Starship starship, Player player, HUDGui hud, OutputGui output) {
+        this.starship = starship;
+        this.player = player;
+        this.output = output;
+        this.hud =  hud;
         gameScreenRec = gameAreaRec;
         inputQueue = new LinkedList<>();
         panel = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
         super.setLayout(new BorderLayout());
-        super.getContentPane().add(panel,BorderLayout.LINE_START);
+        super.getContentPane().add(panel,BorderLayout.CENTER);
         super.addKeyListener(this);
         super.addMouseListener(this);
-        super.setSize(this.gameScreenRec.width*12, this.gameScreenRec.height*17);
+        super.setSize(this.gameScreenRec.width*12, this.gameScreenRec.height*23);
         super.setVisible(true);
         super.setResizable(false);
 
@@ -41,6 +53,9 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         // instantiate aliens through method call
         drawAliens();
         drawPlanets();
+        super.getContentPane().add(hud.getHudPanel(), BorderLayout.LINE_END);
+        super.getContentPane().add(output.getOutputPanel(), BorderLayout.SOUTH);
+
         super.repaint();
         super.setFocusable(true);
         super.requestFocus();
@@ -58,6 +73,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void pointCameraAt(Starship player1, int xfocus, int yfocus) {
+        this.output.setHitsMessage();
         int spx;
         int spy;
 
@@ -200,6 +216,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         else if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height) && hitsIndicator > 0) {
             panel.write('@', spx, spy, Color.red, Color.black);
         }
+        this.output.setDefaultSysOut();
+        hud.updateHealth();
+        hud.updateMap();
+        hud.updatePowerUps();
     }
 
     public void drawAsteroids() {

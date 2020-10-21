@@ -30,8 +30,8 @@ public class Game {
     ArrayList<Asteroid> asteroids;
     ArrayList<Alien> aliens;
     Starship starship;
-    HUD hud;
-    Output output = new Output();
+    HUDGui hud;
+    OutputGui output;
     Level level1;
     TextParser parser;
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
@@ -110,7 +110,7 @@ public class Game {
 
 
     public void begin(int screenWidth, int screenHeight) throws InterruptedException {
-        player1 = new Player('@', Color.red, 5, 14);
+        player1 = new Player('@', Color.cyan, 5, 14);
         //this is where they set positions for all the planets... hmmm
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm');
@@ -129,26 +129,32 @@ public class Game {
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
         starship = new Starship(gameArea, earth, 5, 15);
-        hud = new HUD(starship, player1, output);
         level1 = new Level();
         parser = new TextParser();
+
+        //
+        hud = new HUDGui(starship,player1);
+        output = new OutputGui();
         //space = drawGame();
         System.out.println(player1.getName());
 
 
 
         //this starts the space game area jframe
-        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
-        HUDGui hudGui = new HUDGui(gameArea,starship,player1,output);
+        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight),this.starship,this.player1,this.hud,this.output);
+//        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
+//        OutputGui outputGui = new OutputGui(gameArea);
+//        HUDGui hudGui = new HUDGui(gameArea,starship,player1);
+
         //if we wanted a title screen or something like that, we should put it after the game area get initialized (so like, here)
 
 
 
 
-        play(player1, planets, asteroids, aliens, starship, hud, level1);
+        play(player1, planets, asteroids, aliens, starship, level1);
     }
 
-    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, Level level) throws InterruptedException {
 //        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
@@ -179,9 +185,9 @@ public class Game {
         starship.setFuel(starship.getFuel() + (100 - starship.getFuel()));
         starship.setCurrentLocation(earth);
         parser = new TextParser();
-        output = new Output();
-        hud = new HUD(starship, player1, output);
-        play(player1, planets, asteroids, aliens, starship, hud, level1);
+        output = new OutputGui();
+        hud = new HUDGui(starship, player1);
+        play(player1, planets, asteroids, aliens, starship, level1);
     }
 
     public void restartOrClose() throws InterruptedException{

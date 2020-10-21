@@ -13,6 +13,7 @@ public class Starship {
     public String currentAsteroids;
     private boolean playerCanUseShield = false;
     public int xPos, yPos;
+    private int enemiesDefeated;
 
     public Starship(GameArea gameArea, Planet currentLocation, int xPos, int yPos){
         setCurrentLocation(currentLocation);
@@ -51,6 +52,14 @@ public class Starship {
         }
     }
 
+
+    public void addDefeated() {
+        this.enemiesDefeated++;
+    }
+
+    public int getEnemiesDefeated(){
+        return enemiesDefeated;
+    }
     //Getters and Setters
     public int getxPos() {
         return xPos;
