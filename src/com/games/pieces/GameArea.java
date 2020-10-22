@@ -4,9 +4,11 @@ import asciiPanel.AsciiPanel;
 import com.games.game.HUDGui;
 import com.games.game.OutputGui;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
@@ -72,7 +74,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         return new Point(spx, spy);
     }
 
-    public void pointCameraAt(Starship player1, int xfocus, int yfocus) {
+    public void pointCameraAt(Starship player1, int xfocus, int yfocus) throws FileNotFoundException, LineUnavailableException {
         this.output.setHitsMessage();
         int spx;
         int spy;
@@ -214,6 +216,8 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             panel.write('@', spx, spy, Color.cyan, Color.black);
         }
         else if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height) && hitsIndicator > 0) {
+            Sound crash = new Sound();
+            crash.playSound();
             panel.write('@', spx, spy, Color.red, Color.black);
         }
         this.output.setDefaultSysOut();
@@ -231,13 +235,13 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void floatAsteroids() {
-            for(Asteroid asteroid: asteroids) {
-                asteroid.setX(asteroid.getX()-1);
-                if(asteroid.getX() == (0)) {
-                    asteroid.setX(79);
-                }
+        for(Asteroid asteroid: asteroids) {
+            asteroid.setX(asteroid.getX()-1);
+            if(asteroid.getX() == (0)) {
+                asteroid.setX(79);
             }
-            updateMonsters = 0;
+        }
+        updateMonsters = 0;
     }
 
     public void drawAliens() {
