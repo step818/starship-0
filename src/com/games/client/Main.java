@@ -14,7 +14,7 @@ public class Main {
 //        start the game here
         LandingPage menu = new LandingPage();
         System.out.println("Welcome to Starship");
-        Game game = new Game();
+        //Game game = new Game();
         //game.begin(80,24);
 //        Earth.draw();
 //        Moon.draw();
