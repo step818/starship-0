@@ -43,11 +43,13 @@ public class Starship {
     public void pickUp(GameArea gameArea, ArrayList<Planet> planets) {
         for(Planet planet : planets) {
             if(getxPos() == planet.getX() && getyPos() == planet.getY() && planet.getResources().size()>0) {
-                System.out.println("You made it");
+                gameArea.getOutput().setPlayerMessage();
+                System.out.println("You made it to " + planet.getName() + "!");
                 ArrayList<String> planetsResources = planet.getResources();
                 inventory.add(planetsResources.get(0));
                 planetsResources.remove(0);
                 System.out.println("Inventory: " + inventory);
+                gameArea.getOutput().setDefaultSysOut();
             }
         }
     }

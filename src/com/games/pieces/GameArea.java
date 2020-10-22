@@ -2,6 +2,7 @@ package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
 import com.games.game.HUDGui;
+import com.games.game.Output;
 import com.games.game.OutputGui;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -198,8 +199,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         for(Planet planet: bodies) {
             if(player1.getxPos() == planet.getX() && player1.getyPos() == planet.getY()) {
                 player1.setCurrentLocation(planet);
+                this.hud.updateMap(planet.getName());
                 player1.setInSpace(false);
             } else {
+                this.hud.updateMapSpace();
                 player1.setInSpace(true);
             }
         }
@@ -222,8 +225,8 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         }
         this.output.setDefaultSysOut();
         hud.updateHealth();
-        hud.updateMap();
         hud.updatePowerUps();
+        hud.updateEnemiesDefeated();
     }
 
     public void drawAsteroids() {
@@ -298,6 +301,16 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     // remove monster if they were shot by me
     public void monsterShot(Weapon bullet){
+        for (Alien alien : aliens) {
+            if (alien.getX() == bullet.getX() && alien.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
+        for (Asteroid asteroid : asteroids) {
+            if (asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
         aliens.removeIf(alien -> alien.getX() == bullet.getX() && alien.getY() == bullet.getY());
         asteroids.removeIf(asteroid -> asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY());
     }
@@ -350,6 +363,15 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         updateAttacks++;
         hitsIndicator--;
         panel.repaint();
+    }
+
+    //getters
+    public HUDGui getHud(){
+        return hud;
+    }
+
+    public OutputGui getOutput(){
+        return output;
     }
 
     @Override

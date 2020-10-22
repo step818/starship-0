@@ -46,7 +46,7 @@ public class HUDGui extends JPanel {
         hudPanel.add(this.powerUps);
         //enemies defeated
         hudPanel.add(enemiesDefeated);
-        this.defeated = new JLabel("placeholder, need to fill");
+        this.defeated = new JLabel(Integer.toString(starship.getEnemiesDefeated()));
         hudPanel.add(defeated);
 
 //        //jscroll panel
@@ -75,20 +75,24 @@ public class HUDGui extends JPanel {
 //    }
 
     //setters for labels
-    public void updateMap(){
-        this.currentMap.setText(starship.getCurrentLocation().getName());
+    public void updateMap(String planet){
+        this.map.setText(planet);
+    }
+
+    public void updateMapSpace() {
+        this.map.setText("Space");
     }
 
     public void updateHealth(){
-        this.currentHealth.setText(Integer.toString(starship.getHealth()));
+        this.health.setText(Integer.toString(starship.getHealth()));
     }
 
     public void updatePowerUps() {
-        this.currentPowerUps.setText(player.getInventory().toString());
+        this.powerUps.setText(starship.getInventory().toString());
     }
 
     public void updateEnemiesDefeated() {
-
+        this.defeated.setText(Integer.toString(starship.getEnemiesDefeated()));
     }
 
 
