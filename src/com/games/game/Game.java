@@ -112,7 +112,7 @@ public class Game {
 
 
     public void begin(int screenWidth, int screenHeight) throws InterruptedException, FileNotFoundException, LineUnavailableException {
-        player1 = new Player('@', Color.cyan, 5, 14);
+        player1 = new Player('@', Color.cyan, 8, 16);
         //this is where they set positions for all the planets... hmmm
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
         moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm');
@@ -130,7 +130,7 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(gameArea, earth, 5, 15);
+        starship = new Starship(gameArea, earth, 8, 16);
         level1 = new Level();
         parser = new TextParser();
 
