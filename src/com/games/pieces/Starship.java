@@ -13,6 +13,7 @@ public class Starship {
     public String currentAsteroids;
     private boolean playerCanUseShield = false;
     public int xPos, yPos;
+    private int enemiesDefeated;
 
     public Starship(GameArea gameArea, Planet currentLocation, int xPos, int yPos){
         setCurrentLocation(currentLocation);
@@ -42,15 +43,25 @@ public class Starship {
     public void pickUp(GameArea gameArea, ArrayList<Planet> planets) {
         for(Planet planet : planets) {
             if(getxPos() == planet.getX() && getyPos() == planet.getY() && planet.getResources().size()>0) {
-                System.out.println("You made it");
+                gameArea.getOutput().setPlayerMessage();
+                System.out.println("You made it to " + planet.getName() + "!");
                 ArrayList<String> planetsResources = planet.getResources();
                 inventory.add(planetsResources.get(0));
                 planetsResources.remove(0);
                 System.out.println("Inventory: " + inventory);
+                gameArea.getOutput().setDefaultSysOut();
             }
         }
     }
 
+
+    public void addDefeated() {
+        this.enemiesDefeated++;
+    }
+
+    public int getEnemiesDefeated(){
+        return enemiesDefeated;
+    }
     //Getters and Setters
     public int getxPos() {
         return xPos;

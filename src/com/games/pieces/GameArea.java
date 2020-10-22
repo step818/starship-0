@@ -1,6 +1,9 @@
 package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
+import com.games.game.HUDGui;
+import com.games.game.Output;
+import com.games.game.OutputGui;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
@@ -24,15 +27,25 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private int updateMonsters;
     private int updateAttacks;
     private int hitsIndicator;
-    public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
+
+    private Starship starship;
+    private Player player;
+    private OutputGui output;
+    private HUDGui hud;
+
+    public GameArea(Rectangle gameAreaRec, Starship starship, Player player, HUDGui hud, OutputGui output) {
+        this.starship = starship;
+        this.player = player;
+        this.output = output;
+        this.hud =  hud;
         gameScreenRec = gameAreaRec;
         inputQueue = new LinkedList<>();
         panel = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
         super.setLayout(new BorderLayout());
-        super.getContentPane().add(panel,BorderLayout.LINE_START);
+        super.getContentPane().add(panel,BorderLayout.CENTER);
         super.addKeyListener(this);
         super.addMouseListener(this);
-        super.setSize(this.gameScreenRec.width*12, this.gameScreenRec.height*17);
+        super.setSize(this.gameScreenRec.width*12, this.gameScreenRec.height*23);
         super.setVisible(true);
         super.setResizable(false);
 
@@ -43,6 +56,9 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         // instantiate aliens through method call
         drawAliens();
         drawPlanets();
+        super.getContentPane().add(hud.getHudPanel(), BorderLayout.LINE_END);
+        super.getContentPane().add(output.getOutputPanel(), BorderLayout.SOUTH);
+
         super.repaint();
         super.setFocusable(true);
         super.requestFocus();
@@ -60,6 +76,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void pointCameraAt(Starship player1, int xfocus, int yfocus) throws FileNotFoundException, LineUnavailableException {
+        this.output.setHitsMessage();
         int spx;
         int spy;
 
@@ -182,8 +199,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         for(Planet planet: bodies) {
             if(player1.getxPos() == planet.getX() && player1.getyPos() == planet.getY()) {
                 player1.setCurrentLocation(planet);
+                this.hud.updateMap(planet.getName());
                 player1.setInSpace(false);
             } else {
+                this.hud.updateMapSpace();
                 player1.setInSpace(true);
             }
         }
@@ -204,6 +223,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             crash.playSound();
             panel.write('@', spx, spy, Color.red, Color.black);
         }
+        this.output.setDefaultSysOut();
+        hud.updateHealth();
+        hud.updatePowerUps();
+        hud.updateEnemiesDefeated();
     }
 
     public void drawAsteroids() {
@@ -278,6 +301,16 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     // remove monster if they were shot by me
     public void monsterShot(Weapon bullet){
+        for (Alien alien : aliens) {
+            if (alien.getX() == bullet.getX() && alien.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
+        for (Asteroid asteroid : asteroids) {
+            if (asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
         aliens.removeIf(alien -> alien.getX() == bullet.getX() && alien.getY() == bullet.getY());
         asteroids.removeIf(asteroid -> asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY());
     }
@@ -330,6 +363,15 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         updateAttacks++;
         hitsIndicator--;
         panel.repaint();
+    }
+
+    //getters
+    public HUDGui getHud(){
+        return hud;
+    }
+
+    public OutputGui getOutput(){
+        return output;
     }
 
     @Override
