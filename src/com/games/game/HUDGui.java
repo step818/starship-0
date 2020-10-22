@@ -73,6 +73,9 @@ public class HUDGui extends JPanel {
 //        System.out.println("||  Controls: go, take, use  ||  Resources found:" + currentLocation.getResources() + "                                     ||");
 //        System.out.println("++---------------------------++--------------------------------------------------------------------++");
 //    }
+    //methods
+
+
 
     //setters for labels
     public void updateMap(String planet){

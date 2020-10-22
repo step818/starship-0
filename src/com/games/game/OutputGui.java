@@ -41,6 +41,7 @@ public class OutputGui extends JPanel {
 //        this.messagesPanel.add(playerMessageLabel, BorderLayout.LINE_START);
         this.messagesPanel.add(playerMessagePane, BorderLayout.LINE_START);
         this.messagesPanel.add(hitsMessagePane, BorderLayout.LINE_END);
+        displayInstructions();
 
 //        parentWindow.getContentPane().add(messagesPanel, BorderLayout.SOUTH);
 //        parentWindow.revalidate();
@@ -53,6 +54,16 @@ public class OutputGui extends JPanel {
     }
 
     // business methods
+
+    public void displayInstructions() {
+        setPlayerMessage();
+        System.out.println("Your spaceship is the Cyan '@'.");
+        System.out.println("Press the arrow keys to navigate. Z to shoot, X to interact.");
+        System.out.println("Avoid aliens, asteroids, and enemy projectiles!");
+        System.out.println("Gather items from planets and make it to Mars to colonize it in the name of Amazon");
+        setDefaultSysOut();
+    }
+
 
     public static void introNarrative(Player player) throws InterruptedException {
         // The story begins, fill the user in with their mission
@@ -80,6 +91,7 @@ public class OutputGui extends JPanel {
     public static void askName() {
         System.out.println("Whats your name: ");
     }
+
 
     public static void printAsteroidObstacle(Asteroid asteroid){
         System.out.println("A " + asteroid.getSize() + " asteroid just appeared in front of you, \n" +
