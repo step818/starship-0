@@ -5,6 +5,7 @@ import com.games.pieces.*;
 //import com.games.pieces.Player;
 //import com.games.pieces.Starship;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -12,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.Random;
 
@@ -109,7 +111,7 @@ public class Game {
 
 
 
-    public void begin(int screenWidth, int screenHeight) throws InterruptedException {
+    public void begin(int screenWidth, int screenHeight) throws InterruptedException, FileNotFoundException, LineUnavailableException {
         player1 = new Player('@', Color.red, 5, 14);
         //this is where they set positions for all the planets... hmmm
         earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
@@ -148,7 +150,7 @@ public class Game {
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 
-    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException {
+    public void play(Player player, ArrayList<Planet> planets, ArrayList<Asteroid> asteroids, ArrayList<Alien> aliens, Starship starship, HUD hud, Level level) throws InterruptedException, FileNotFoundException, LineUnavailableException {
 //        output.introNarrative(player);
         String initialThoughts = "Welcome to Starship.";
         hud.prompt1(initialThoughts);
@@ -173,7 +175,7 @@ public class Game {
 //        }
     }
 
-    public void restart() throws InterruptedException{
+    public void restart() throws InterruptedException, FileNotFoundException, LineUnavailableException {
         player1.clearInventory();
         starship.setHealth(starship.getHealth() + (100 - starship.getHealth()));
         starship.setFuel(starship.getFuel() + (100 - starship.getFuel()));
@@ -184,7 +186,7 @@ public class Game {
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 
-    public void restartOrClose() throws InterruptedException{
+    public void restartOrClose() throws InterruptedException, FileNotFoundException, LineUnavailableException {
         if(startOverPrompt()){
             this.restart();
         }
@@ -285,14 +287,14 @@ public class Game {
             // possibly do things if the user clicks the mouse
         }
     }
-    public void render(){
+    public void render() throws FileNotFoundException, LineUnavailableException {
         gameArea.pointCameraAt(starship, starship.getxPos(), starship.getyPos());
         gameArea.refresh();
     }
     // load the JFrame window
 
     // this can be put in the main to load windows on same process rather than what first group did
-    public void run() {
+    public void run() throws FileNotFoundException, LineUnavailableException {
         isRunning = true;
 
         while(isRunning) {
