@@ -118,7 +118,7 @@ public class Game {
         space = drawGame();
         //System.out.println(player1.getName());
         gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
-
+        new LandingPage();
         play(player1, planets, asteroids, aliens, starship, hud, level1);
     }
 

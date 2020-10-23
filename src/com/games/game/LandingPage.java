@@ -77,22 +77,20 @@ public class LandingPage extends JFrame implements ActionListener {
     //close landing page
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() == "play") {
-
-            System.out.println("lets play");
-            super.getContentPane().removeAll();
-            game = new Game();
-
+            //System.out.println("lets play");
+            setVisible(false);
+            dispose();
             try {
                 game.begin(80,24);
-                super.dispose();
                 game.gameArea.revalidate();
                 game.gameArea.repaint();
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
         } else {
-            System.out.println("it's not working");
-            dispose();
+            //System.out.println("it's not working");
+            System.exit(0);
+
         }
     }
 }
