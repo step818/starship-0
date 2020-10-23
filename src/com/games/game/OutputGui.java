@@ -72,7 +72,7 @@ public class OutputGui extends JPanel {
         TimeUnit.SECONDS.sleep(1);
         System.out.println("Hello...");
         TimeUnit.SECONDS.sleep(1);
-        System.out.println("Hi " + player.getName() + ". ");
+        //System.out.println("Hi " + player.getName() + ". ");
         TimeUnit.SECONDS.sleep(1);
         System.out.println("This is Elon Musk calling.");
         TimeUnit.SECONDS.sleep(1);
@@ -80,7 +80,8 @@ public class OutputGui extends JPanel {
         TimeUnit.SECONDS.sleep(1);
         System.out.println("There is an asteroid headed straight for us. \nMars is the next frontier for humanity.");
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("The world needs you, " + player.getName() + ", to be \nthe one who will fly the Starship to Mars, \nand plant the first seed. ");
+        //System.out.println("The world needs you, " + player.getName() + ", to be \nthe one who " +
+                //"will fly the Starship to Mars, \nand plant the first seed. ");
         TimeUnit.SECONDS.sleep(2);
         System.out.println("Wow, but why me? I\'m not rea...");
         TimeUnit.SECONDS.sleep(1);

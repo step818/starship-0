@@ -39,7 +39,7 @@ public class Game {
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
 
     //private Rectangle gameScreenRec;
-    private GameArea gameArea;
+    public GameArea gameArea;
     private boolean isRunning;
     private static final int mapWidth = 100;
     private static final int mapHeight = 100;
@@ -138,7 +138,7 @@ public class Game {
         hud = new HUDGui(starship,player1);
         output = new OutputGui();
         //space = drawGame();
-        System.out.println(player1.getName());
+        //System.out.println(player1.getName());
 
 
 

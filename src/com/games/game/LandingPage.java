@@ -6,7 +6,9 @@ import com.games.pieces.GameArea;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -86,6 +88,10 @@ public class LandingPage extends JFrame implements ActionListener {
                 game.gameArea.repaint();
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            } catch (LineUnavailableException lineUnavailableException) {
+                lineUnavailableException.printStackTrace();
             }
         } else {
             //System.out.println("it's not working");
