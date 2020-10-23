@@ -15,8 +15,9 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException, LineUnavailableException {
 //        start the game here
-        //LandingPage menu = new LandingPage();
+
         System.out.println("Welcome to Starship");
+        //LandingPage menu = new LandingPage();
         Game game = new Game();
         game.begin(80,24);
 //        Earth.draw();

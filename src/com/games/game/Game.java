@@ -147,9 +147,9 @@ public class Game {
 //        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
 //        OutputGui outputGui = new OutputGui(gameArea);
 //        HUDGui hudGui = new HUDGui(gameArea,starship,player1);
-        new LandingPage();
-        //if we wanted a title screen or something like that, we should put it after the game area get initialized (so like, here)
 
+        //if we wanted a title screen or something like that, we should put it after the game area get initialized (so like, here)
+        new LandingPage();
 
 
 
