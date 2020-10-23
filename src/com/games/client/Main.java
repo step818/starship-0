@@ -6,11 +6,14 @@ import com.games.game.LandingPage;
 //import com.games.maps.Earth;
 //import com.games.maps.Moon;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException, FileNotFoundException, LineUnavailableException {
 //        start the game here
         //LandingPage menu = new LandingPage();
         System.out.println("Welcome to Starship");

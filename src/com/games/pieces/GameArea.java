@@ -1,10 +1,15 @@
 package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
+import com.games.game.HUDGui;
+import com.games.game.Output;
+import com.games.game.OutputGui;
 
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
@@ -21,16 +26,29 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private ArrayList<Planet> bodies = new ArrayList<>();
     private int updateMonsters;
     private int updateAttacks;
-    public GameArea(Rectangle gameAreaRec, Rectangle mapAreaRec) {
+    private int hitsIndicator;
+
+    private Starship starship;
+    private Player player;
+    private OutputGui output;
+    private HUDGui hud;
+
+    public GameArea(Rectangle gameAreaRec, Starship starship, Player player, HUDGui hud, OutputGui output) {
+        this.starship = starship;
+        this.player = player;
+        this.output = output;
+        this.hud =  hud;
         gameScreenRec = gameAreaRec;
         inputQueue = new LinkedList<>();
         panel = new AsciiPanel(this.gameScreenRec.width, this.gameScreenRec.height);
-        super.add(panel);
+        super.setLayout(new BorderLayout());
+        super.getContentPane().add(panel,BorderLayout.CENTER);
         super.addKeyListener(this);
         super.addMouseListener(this);
-        super.setSize(this.gameScreenRec.width*9, this.gameScreenRec.height*16);
+        super.setSize(this.gameScreenRec.width*12, this.gameScreenRec.height*23);
         super.setVisible(true);
         super.setResizable(false);
+
         super.setTitle("Starship");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //instantiate asteroids through method call
@@ -38,7 +56,16 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         // instantiate aliens through method call
         drawAliens();
         drawPlanets();
+        super.getContentPane().add(hud.getHudPanel(), BorderLayout.LINE_END);
+        super.getContentPane().add(output.getOutputPanel(), BorderLayout.SOUTH);
+
         super.repaint();
+        super.setFocusable(true);
+        super.requestFocus();
+
+        //put another panel in here in the constructor and take inputs from the HUD
+
+
     }
 
     // distance from x and y to begin writing/printing from
@@ -48,7 +75,15 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         return new Point(spx, spy);
     }
 
-    public void pointCameraAt(Starship player1, int xfocus, int yfocus) {
+    public void pointCameraAt(Starship player1, int xfocus, int yfocus) throws FileNotFoundException, LineUnavailableException {
+        this.output.setHitsMessage();
+        int spx;
+        int spy;
+
+        Point origin = GetCameraOrigin(xfocus, yfocus);
+
+        spx = player1.getxPos() - origin.x;
+        spy = player1.getyPos() - origin.y;
 
         // paint the board with '.' to show where the player can move to
         for (int x = 0; x < gameScreenRec.width; x++){
@@ -68,12 +103,17 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             floatAsteroids();
         }
 
-        // check for asteroid collision
+        // check for starship/asteroid collision "Ascii A"  (Hits 1 HP X 25 times for some reason)
         for(Asteroid asteroid: asteroids) {
-            if(player1.getxPos()==(asteroid.getX()) && player1.getyPos()==(asteroid.getY())) {
-                System.out.println("CRASH!");
+            if (player1.getxPos() == (asteroid.getX()) && player1.getyPos() == (asteroid.getY())) {
+                System.out.println("Your Starship smashed into an Asteroid! When will the damage stop!!??");
+                panel.write('@', spx, spy, Color.red, Color.black);
+                hitsIndicator = 25;
                 player1.takenDamage(1);
                 System.out.println("Health: " + player1.getHealth());
+            } else if (player1.getHealth() <= -1) {
+                System.out.printf("Your ship sustained total damage and you died in the crash");
+                System.exit(0);
             }
         }
 
@@ -88,20 +128,31 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             floatAliens();
         }
 
-        //check for alien collision
-        for(Alien alien: aliens) {
-            if(player1.getxPos() == alien.getX() && player1.getyPos() == alien.getY()) {
+        //check for starship/alien collision  "Ascii X"  (Hits 1 HP)
+        for (Alien alien : aliens) {
+            if (player1.getxPos() == alien.getX() && player1.getyPos() == alien.getY()) {
+                System.out.println("The Starship crashed into alien Ship!");
+                panel.write('@', spx, spy, Color.red, Color.black);
+                hitsIndicator = 10;
                 player1.takenDamage(1);
-                System.out.println("Health: " +player1.getHealth());
+                System.out.println("Health: " + player1.getHealth());
+            } else if (player1.getHealth() <= -1) {
+                System.out.printf("Your ship sustained total damage and you died in the crash");
+                System.exit(0);
             }
         }
 
-        // check for alien bullets collision
-        for(Weapon ablt: alienBullets) {
-            if(player1.getxPos() == ablt.getX() && player1.getyPos() == ablt.getY()) {
-                System.out.println("Starship hit!");
+        // check for starship/bullets collision  "Ascii *" (Hits 1 HP)
+        for (Weapon ablt : alienBullets) {
+            if (player1.getxPos() == ablt.getX() && player1.getyPos() == ablt.getY()) {
+                System.out.println("Starship has cruised into an alien Bullet!");
+                panel.write('@', spx, spy, Color.red, Color.black);
+                hitsIndicator = 10;
                 player1.takenDamage(1);
                 System.out.println("Health: " + player1.getHealth());
+            } else if (player1.getHealth() <= 0) {
+                System.out.printf("Your ship sustained total damage and you died in the crash");
+                System.exit(0);
             }
         }
 
@@ -141,31 +192,42 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         // draw the alienBullets
         for(Weapon ablt: alienBullets) {
             panel.write('+', ablt.getX()-1, ablt.getY(), Color.magenta, Color.black);
+
         }
 
         // check to see if the player is directly on a planet
         for(Planet planet: bodies) {
             if(player1.getxPos() == planet.getX() && player1.getyPos() == planet.getY()) {
                 player1.setCurrentLocation(planet);
+                this.hud.updateMap(planet.getName());
                 player1.setInSpace(false);
+                break;
             } else {
+                this.hud.updateMapSpace();
                 player1.setInSpace(true);
             }
         }
 
         //the distance from the left(x) and top(y) to begin writing from
-        int spx;
-        int spy;
 
-        Point origin = GetCameraOrigin(xfocus, yfocus);
 
-        spx = player1.getxPos() - origin.x;
-        spy = player1.getyPos() - origin.y;
+
+
+
 
         // draw the starship
-        if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height)) {
+        if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height) && hitsIndicator <= 0) {
+            panel.write('@', spx, spy, Color.cyan, Color.black);
+        }
+        else if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height) && hitsIndicator > 0) {
+            Sound crash = new Sound();
+            crash.playSound();
             panel.write('@', spx, spy, Color.red, Color.black);
         }
+        this.output.setDefaultSysOut();
+        hud.updateHealth();
+        hud.updatePowerUps();
+        hud.updateEnemiesDefeated();
     }
 
     public void drawAsteroids() {
@@ -177,13 +239,13 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     }
 
     public void floatAsteroids() {
-            for(Asteroid asteroid: asteroids) {
-                asteroid.setX(asteroid.getX()-1);
-                if(asteroid.getX() == (0)) {
-                    asteroid.setX(79);
-                }
+        for(Asteroid asteroid: asteroids) {
+            asteroid.setX(asteroid.getX()-1);
+            if(asteroid.getX() == (0)) {
+                asteroid.setX(79);
             }
-            updateMonsters = 0;
+        }
+        updateMonsters = 0;
     }
 
     public void drawAliens() {
@@ -240,6 +302,16 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     // remove monster if they were shot by me
     public void monsterShot(Weapon bullet){
+        for (Alien alien : aliens) {
+            if (alien.getX() == bullet.getX() && alien.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
+        for (Asteroid asteroid : asteroids) {
+            if (asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY()) {
+                starship.addDefeated();
+            }
+        }
         aliens.removeIf(alien -> alien.getX() == bullet.getX() && alien.getY() == bullet.getY());
         asteroids.removeIf(asteroid -> asteroid.getX() == bullet.getX() && asteroid.getY() == bullet.getY());
     }
@@ -290,7 +362,17 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     public void refresh() {
         updateMonsters++;
         updateAttacks++;
+        hitsIndicator--;
         panel.repaint();
+    }
+
+    //getters
+    public HUDGui getHud(){
+        return hud;
+    }
+
+    public OutputGui getOutput(){
+        return output;
     }
 
     @Override

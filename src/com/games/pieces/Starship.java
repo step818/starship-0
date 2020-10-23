@@ -4,15 +4,16 @@ import java.util.ArrayList;
 
 public class Starship {
     private ArrayList<String> inventory = new ArrayList<>();
-    private static int health = 100;
-    private static int fuel = 100;
-    private static int damage = 20;
-    private static int fuelUsed = 10;
+    private int health = 100;
+    private int fuel = 100;
+    private int damage = 20;
+    private int fuelUsed = 10;
     public boolean inSpace = false;
-    public static Planet currentLocation;
-    public static String currentAsteroids;
-    private static boolean playerCanUseShield = false;
+    public Planet currentLocation;
+    public String currentAsteroids;
+    private boolean playerCanUseShield = false;
     public int xPos, yPos;
+    private int enemiesDefeated;
 
     public Starship(GameArea gameArea, Planet currentLocation, int xPos, int yPos){
         setCurrentLocation(currentLocation);
@@ -42,15 +43,25 @@ public class Starship {
     public void pickUp(GameArea gameArea, ArrayList<Planet> planets) {
         for(Planet planet : planets) {
             if(getxPos() == planet.getX() && getyPos() == planet.getY() && planet.getResources().size()>0) {
-                System.out.println("You made it");
+                gameArea.getOutput().setPlayerMessage();
+                System.out.println("You made it to " + planet.getName() + "!");
                 ArrayList<String> planetsResources = planet.getResources();
                 inventory.add(planetsResources.get(0));
                 planetsResources.remove(0);
                 System.out.println("Inventory: " + inventory);
+                gameArea.getOutput().setDefaultSysOut();
             }
         }
     }
 
+
+    public void addDefeated() {
+        this.enemiesDefeated++;
+    }
+
+    public int getEnemiesDefeated(){
+        return enemiesDefeated;
+    }
     //Getters and Setters
     public int getxPos() {
         return xPos;
@@ -76,7 +87,7 @@ public class Starship {
         this.health = health;
     }
 
-    public static int getFuel() {
+    public int getFuel() {
         return fuel;
     }
 
@@ -84,7 +95,7 @@ public class Starship {
         this.fuel = fuel;
     }
 
-    public static int getDamage(){
+    public int getDamage(){
         return damage;
     }
 
@@ -108,12 +119,12 @@ public class Starship {
         this.inventory = inventory;
     }
 
-    public static boolean getPlayerCanUseShield() {
+    public boolean getPlayerCanUseShield() {
         return playerCanUseShield;
     }
 
-    public static void setPlayerCanUseShield(boolean playerCanUseShield) {
-        Starship.playerCanUseShield = playerCanUseShield;
+    public void setPlayerCanUseShield(boolean playerCanUseShield) {
+        this.playerCanUseShield = playerCanUseShield;
     }
 
 }
