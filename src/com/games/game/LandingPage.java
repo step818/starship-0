@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 
 public class LandingPage extends JFrame implements ActionListener {
 
-    private Game game;
+    //private Game game = new Game();
      //A JButton that checks if the user wants to play.
     private JButton playButton;
     //A JButton that checks if the user wants to quit.
@@ -30,6 +30,7 @@ public class LandingPage extends JFrame implements ActionListener {
     public LandingPage() {
         super("Starship Landing Page");
         createMenuFrame();
+
     }
 
 
@@ -82,17 +83,16 @@ public class LandingPage extends JFrame implements ActionListener {
             //System.out.println("lets play");
             setVisible(false);
             dispose();
-            try {
-                game.begin(80,24);
-                game.gameArea.revalidate();
-                game.gameArea.repaint();
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            } catch (LineUnavailableException lineUnavailableException) {
-                lineUnavailableException.printStackTrace();
-            }
+//
+////                game.gameArea.revalidate();
+////                game.gameArea.repaint();
+//            } catch (InterruptedException interruptedException) {
+//                interruptedException.printStackTrace();
+//            } catch (FileNotFoundException fileNotFoundException) {
+//                fileNotFoundException.printStackTrace();
+//            } catch (LineUnavailableException lineUnavailableException) {
+//                lineUnavailableException.printStackTrace();
+//            }
         } else {
             //System.out.println("it's not working");
             System.exit(0);
