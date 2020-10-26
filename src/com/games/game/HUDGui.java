@@ -34,7 +34,11 @@ public class HUDGui extends JPanel {
         this.hudPanel.setLayout(new BoxLayout(hudPanel, BoxLayout.PAGE_AXIS));
         //map
         hudPanel.add(currentMap);
-        this.map = new JLabel(starship.getCurrentLocation().getName());
+        this.map = new JLabel("Space");
+
+//        else {
+//            this.map = new JLabel(starship.getCurrentLocation().getName());
+//        }
         hudPanel.add(this.map);
         //health
         hudPanel.add(currentHealth);

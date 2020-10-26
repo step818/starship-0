@@ -68,6 +68,10 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     }
 
+    public AsciiPanel getAsciiPanel() {
+        return panel;
+    }
+
     // distance from x and y to begin writing/printing from
     public Point GetCameraOrigin(int xfocus, int yfocus) {
         int spx = Math.max(0, Math.min(xfocus - gameScreenRec.width / 2, 0));
@@ -293,11 +297,11 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
 
     // place the planets on the board here
     public void drawPlanets() {
-        bodies.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.cyan, 'E'));
-        bodies.add(new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm'));
-        bodies.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.pink, 'V'));
-        bodies.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M'));
-        bodies.add(new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M'));
+        bodies.add(new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.cyan, 'E',starship));
+        bodies.add(new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm',starship));
+        bodies.add(new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.pink, 'V',starship));
+        bodies.add(new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M',starship));
+        bodies.add(new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M',starship));
     }
 
     // remove monster if they were shot by me

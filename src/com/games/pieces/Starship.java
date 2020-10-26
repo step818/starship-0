@@ -40,7 +40,7 @@ public class Starship {
         setFuel(getFuel() + (100-getFuel()));
     }
 
-    public void pickUp(GameArea gameArea, ArrayList<Planet> planets) {
+    public boolean pickUp(GameArea gameArea, ArrayList<Planet> planets) {
         for(Planet planet : planets) {
             if(getxPos() == planet.getX() && getyPos() == planet.getY() && planet.getResources().size()>0) {
                 gameArea.getOutput().setPlayerMessage();
@@ -50,8 +50,10 @@ public class Starship {
                 planetsResources.remove(0);
                 System.out.println("Inventory: " + inventory);
                 gameArea.getOutput().setDefaultSysOut();
+                return true;
             }
         }
+        return false;
     }
 
 
