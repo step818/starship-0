@@ -154,7 +154,7 @@ public class Game {
 //        HUDGui hudGui = new HUDGui(gameArea,starship,player1);
 
         //if we wanted a title screen or something like that, we should put it after the game area get initialized (so like, here)
-        new LandingPage();
+       //new LandingPage(); Broken in DevGame
 
 
 
@@ -320,6 +320,8 @@ public class Game {
     // this can be put in the main to load windows on same process rather than what first group did
     public void run() throws FileNotFoundException, LineUnavailableException {
         isRunning = true;
+        String filepath = "./Sound/StarshipBGM16.wav"; //LOAD DEFAULT BGM
+        BackgroundMusic.playBGM(filepath); //CALL BGM WITH DEFAULT
 
         while(isRunning) {
             long startTime = System.nanoTime();
