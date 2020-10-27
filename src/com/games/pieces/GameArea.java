@@ -2,7 +2,6 @@ package com.games.pieces;
 
 import asciiPanel.AsciiPanel;
 import com.games.game.HUDGui;
-import com.games.game.Output;
 import com.games.game.OutputGui;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -10,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -32,6 +30,8 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
     private Player player;
     private OutputGui output;
     private HUDGui hud;
+
+    Sound crashSound = new Sound();
 
     public GameArea(Rectangle gameAreaRec, Starship starship, Player player, HUDGui hud, OutputGui output) {
         this.starship = starship;
@@ -224,8 +224,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
             panel.write('@', spx, spy, Color.cyan, Color.black);
         }
         else if ((spx >= 0 && spx < gameScreenRec.width) && (spy >= 0 && spy < gameScreenRec.height) && hitsIndicator > 0) {
-            Sound crash = new Sound();
-            crash.playSound();
+            crashSound.playSound();
             panel.write('@', spx, spy, Color.red, Color.black);
         }
         this.output.setDefaultSysOut();
