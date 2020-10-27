@@ -1,5 +1,6 @@
 package com.games.game;
 
+import com.games.maps.MapPanelGenerator;
 import com.games.pieces.*;
 //import com.games.pieces.Planet;
 //import com.games.pieces.Player;
@@ -39,7 +40,8 @@ public class Game {
     public static HashMap<String, HashMap<String, String>> space = new HashMap<>();
 
     //private Rectangle gameScreenRec;
-    private GameArea gameArea;
+    public MapPanelGenerator currentPanel;
+    public GameArea gameArea;
     private boolean isRunning;
     private static final int mapWidth = 100;
     private static final int mapHeight = 100;
@@ -112,15 +114,17 @@ public class Game {
 
 
     public void begin(int screenWidth, int screenHeight) throws InterruptedException, FileNotFoundException, LineUnavailableException {
+
         player1 = new Player('@', Color.cyan, 8, 16);
-        //this is where they set positions for all the planets... hmmm
-        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E');
-        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm');
-        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.magenta, 'V');
-        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M');
-        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")));
-        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")));
-        mars = new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M');
+        starship = new Starship(gameArea, earth, 8, 16);
+//        this is where they set positions for all the planets... hmmm but its not really used?
+        earth = new Planet("Earth", new ArrayList<>(Arrays.asList("water", "food")), 10, 16, Color.blue, 'E',starship);
+        moon = new Planet("Moon", new ArrayList<>(Arrays.asList("fuel", "Elon Musk", "weapon")), 13, 11, Color.LIGHT_GRAY, 'm',starship);
+        venus = new Planet("Venus", new ArrayList<>(Arrays.asList("fuel", "scrap metal")), 6, 20, Color.magenta, 'V',starship);
+        mercury = new Planet("Mercury", new ArrayList<>(Arrays.asList("super laser", "shield")), 4, 22, Color.yellow, 'M',starship);
+        obstacle1 = new Planet("Asteroids1", new ArrayList<>(Arrays.asList("speed booster")),starship);
+        obstacle2 = new Planet("Aliens1", new ArrayList<>(Arrays.asList("bb gun")),starship);
+        mars = new Planet("Mars", new ArrayList<>(), 70, 3, Color.orange, 'M',starship);
         planets.add(earth);
         planets.add(moon);
         planets.add(venus);
@@ -130,7 +134,7 @@ public class Game {
         planets.add(obstacle2);
         asteroids = createAsteroids(3, "large");
         aliens = createAliens(3);
-        starship = new Starship(gameArea, earth, 8, 16);
+
         level1 = new Level();
         parser = new TextParser();
 
@@ -138,18 +142,19 @@ public class Game {
         hud = new HUDGui(starship,player1);
         output = new OutputGui();
         //space = drawGame();
-        System.out.println(player1.getName());
+        //System.out.println(player1.getName());
 
 
 
         //this starts the space game area jframe
         gameArea = new GameArea(new Rectangle(screenWidth, screenHeight),this.starship,this.player1,this.hud,this.output);
+
 //        gameArea = new GameArea(new Rectangle(screenWidth, screenHeight), new Rectangle(mapWidth, mapHeight));
 //        OutputGui outputGui = new OutputGui(gameArea);
 //        HUDGui hudGui = new HUDGui(gameArea,starship,player1);
 
         //if we wanted a title screen or something like that, we should put it after the game area get initialized (so like, here)
-
+        new LandingPage();
 
 
 
@@ -286,17 +291,30 @@ public class Game {
                     gameArea.drawMyBullets(starship.getxPos(), starship.getyPos());
                     break;
                 case KeyEvent.VK_X:
-                    starship.pickUp(gameArea, planets);
+                    if (starship.pickUp(gameArea, planets)) {
+                        gameArea.getContentPane().remove(gameArea.getAsciiPanel());
+                        currentPanel = new MapPanelGenerator(starship);
+                        gameArea.add(currentPanel);
+                        gameArea.revalidate();
+                        gameArea.repaint();
+                    }
                     break;
             }
         } else if (event instanceof MouseEvent) {
             // possibly do things if the user clicks the mouse
         }
     }
-    public void render() throws FileNotFoundException, LineUnavailableException {
+    public void renderGameArea() throws FileNotFoundException, LineUnavailableException {
         gameArea.pointCameraAt(starship, starship.getxPos(), starship.getyPos());
         gameArea.refresh();
     }
+
+
+    public void renderPlanetMaps(){
+        starship.getCurrentLocation().posUpdate();
+        currentPanel.repaint();
+    }
+
     // load the JFrame window
 
     // this can be put in the main to load windows on same process rather than what first group did
@@ -307,7 +325,7 @@ public class Game {
             long startTime = System.nanoTime();
 
             processInput();
-            render();
+            renderGameArea();
             long endTime = System.nanoTime();
 
             long sleepTime = timePerLoop - (endTime-startTime);
