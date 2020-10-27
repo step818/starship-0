@@ -45,6 +45,21 @@ public class Planet {
             tiles.add(new ArrayList<Tile>());
             for (char c : charray) {
                 switch (c) {
+                    case '~':
+                        tiles.get(i).add(Tile.WATER);
+                        break;
+                    case '=':
+                        tiles.get(i).add(Tile.MATERIALS);
+                        break;
+                    case 'o':
+                        tiles.get(i).add(Tile.SEEDS);
+                        break;
+                    case 'F':
+                        tiles.get(i).add(Tile.FLAG);
+                        break;
+                    case 'L':
+                        tiles.get(i).add(Tile.LAND);
+                        break;
                     case '.':
                         tiles.get(i).add(Tile.NOTHING);
                         break;
@@ -55,7 +70,7 @@ public class Planet {
                         tiles.get(i).add(Tile.PLAYER);
                         break;
                     case '^':
-                        tiles.get(i).add(Tile.DOCK);
+                        tiles.get(i).add(Tile.SPACEDOCK);
                         break;
                     case 'r':
                         tiles.get(i).add(Tile.RUM);
@@ -72,9 +87,9 @@ public class Planet {
                     case '/':
                         tiles.get(i).add(Tile.DOOR);
                         break;
-                    case 'p':
-                        tiles.get(i).add(Tile.PIRATE);
-                        break;
+//                    case 'p':
+//                        tiles.get(i).add(Tile.PIRATE);
+//                        break;
                     case 'f':
                         tiles.get(i).add(Tile.FRIENDLY);
                         break;
@@ -99,16 +114,14 @@ public class Planet {
                     case 'X':
                         tiles.get(i).add(Tile.X);
                         break;
-                    case '~':
-                        tiles.get(i).add(Tile.TILDE);
-                        break;
+
                     case ' ':
                         tiles.get(i).add(Tile.SPACE);
                         break;
-                    case '?':
+                    case '`':
                         tiles.get(i).add(Tile.POI);
                         break;
-                    case '`':
+                    case '?':
                         tiles.get(i).add(Tile.CLUE);
                         break;
 
@@ -128,9 +141,7 @@ public class Planet {
                     case 'E':
                         tiles.get(i).add(Tile.E);
                         break;
-                    case 'F':
-                        tiles.get(i).add(Tile.F);
-                        break;
+
                     case 'G':
                         tiles.get(i).add(Tile.G);
                         break;
@@ -146,9 +157,7 @@ public class Planet {
                     case 'K':
                         tiles.get(i).add(Tile.K);
                         break;
-                    case 'L':
-                        tiles.get(i).add(Tile.L);
-                        break;
+
                     case 'M':
                         tiles.get(i).add(Tile.M);
                         break;
@@ -188,9 +197,7 @@ public class Planet {
                         break;
 
                     // STORE ITEMS
-                    case '=':
-                        tiles.get(i).add(Tile.SOAP);
-                        break;
+
                     case '|':
                         tiles.get(i).add(Tile.SWORD);
                         break;
