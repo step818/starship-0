@@ -49,6 +49,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         super.setVisible(true);
         super.setResizable(false);
 
+
         super.setTitle("Starship");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //instantiate asteroids through method call
@@ -60,6 +61,7 @@ public class GameArea extends JFrame implements KeyListener, MouseListener{
         super.getContentPane().add(output.getOutputPanel(), BorderLayout.SOUTH);
 
         super.repaint();
+        super.revalidate();
         super.setFocusable(true);
         super.requestFocus();
 
